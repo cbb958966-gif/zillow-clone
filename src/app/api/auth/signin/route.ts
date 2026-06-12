@@ -18,9 +18,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (!process.env.JWT_SECRET) {
+      return NextResponse.json(
+        { error: 'Server configuration error: JWT_SECRET is not set' },
+        { status: 500 }
+      )
+    }
+
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role },
-      process.env.JWT_SECRET!,
+      process.env.JWT_SECRET,
       { expiresIn: '7d' }
     )
 

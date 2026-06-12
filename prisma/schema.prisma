@@ -1,0 +1,186 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  firstName     String?
+  lastName      String?
+  phone         String?
+  role          String    @default("USER")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+
+  savedProperties SavedProperty[]
+  agentProfile    Agent?
+  reviews         Review[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Property {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  price       Float
+  address     String
+  city        String
+  state       String
+  zipCode     String
+  beds        Int?
+  baths       Float?
+  sqft        Int?
+  lotSize     Float?
+  yearBuilt   Int?
+  propertyType String   @default("SINGLE_FAMILY")
+  status      String   @default("ACTIVE")
+  lat         Float?
+  lng         Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  images PropertyImage[]
+  agentId String?
+  agent  Agent? @relation(fields: [agentId], references: [id])
+  savedProperties SavedProperty[]
+  
+  @@map("properties")
+}
+
+model PropertyImage {
+  id           String    @id @default(cuid())
+  propertyId   String
+  url          String
+  publicId     String?   @unique
+  filename     String?
+  size         Int?
+  format       String?
+  width        Int?
+  height       Int?
+  isPrimary    Boolean   @default(false)
+  featured     Boolean   @default(false)
+  order        Int       @default(0)
+  tags         String?
+  alt          String?
+  description  String?
+  metadata     String?
+  uploadedBy   String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("property_images")
+}
+
+model Agent {
+  id           String @id @default(cuid())
+  userId       String @unique
+  license      String?
+  broker       String?
+  phone        String?
+  email        String?
+  bio          String?
+  specialties  String?
+  experience   Int?
+  commissionRate Float?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  properties   Property[]
+  reviews      Review[]
+
+  @@map("agents")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  agentId   String
+  userId    String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  agent Agent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}
+
+model SavedProperty {
+  id         String   @id @default(cuid())
+  userId     String
+  propertyId String
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, propertyId])
+  @@map("saved_properties")
+}
+
+model MediaLibrary {
+  id        String   @id @default(cuid())
+  publicId  String?  @unique
+  url       String
+  filename  String
+  size      Int
+  format    String
+  width     Int
+  height    Int
+  tags      String?
+  metadata  String?
+  folder    String
+  uploadedBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("media_library")
+}

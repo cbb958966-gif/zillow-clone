@@ -269,8 +269,8 @@ export default function Dashboard() {
 
         {/* Tabs */}
         <div className="rounded-2xl bg-card border border-border overflow-hidden mb-8">
-          <div className="border-b border-border bg-secondary/50">
-            <div className="flex">
+          <div className="border-b border-border bg-secondary/50 overflow-x-auto">
+            <div className="flex min-w-max md:min-w-0">
               {[
                 { id: 'saved', label: 'Saved Properties', icon: Heart },
                 { id: 'profile', label: 'Profile', icon: User },
@@ -278,13 +278,13 @@ export default function Dashboard() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-6 py-4 text-sm font-medium border-b-2 transition-all ${
+                  className={`flex items-center gap-2 px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
                     activeTab === tab.id
                       ? 'border-primary text-primary bg-background'
                       : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-secondary'
                   }`}
                 >
-                  <tab.icon className="w-4 h-4" /> {tab.label}
+                  <tab.icon className="w-3.5 md:w-4 h-3.5 md:h-4" /> {tab.label}
                 </button>
               ))}
             </div>

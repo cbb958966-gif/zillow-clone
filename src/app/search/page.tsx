@@ -253,7 +253,7 @@ function SearchContent() {
       </motion.header>
 
       {/* Hero */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden pt-16">
+      <section className="relative min-h-[50vh] md:min-h-[70vh] flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0">
           <Image src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80" alt="Luxury home" fill className="object-cover" priority />
           <div className="absolute inset-0 bg-black/60" />
@@ -262,29 +262,29 @@ function SearchContent() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="max-w-4xl mx-auto">
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full mb-6">
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-white/90 text-sm font-medium">{pagination.total.toLocaleString()} Active Listings</span>
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6">
+              <span className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-400 rounded-full animate-pulse" />
+              <span className="text-white/90 text-xs sm:text-sm font-medium">{pagination.total.toLocaleString()} Active Listings</span>
             </motion.div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight text-center">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight text-center">
               Find Your
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Perfect Home</span>
             </h1>
 
-            <p className="text-lg text-white/80 mb-8 text-center">Discover your dream property from thousands of listings across the country.</p>
+            <p className="text-sm sm:text-base md:text-lg text-white/80 mb-6 sm:mb-8 text-center">Discover your dream property from thousands of listings across the country.</p>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-              <div className="bg-background/60 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-2xl">
-                <form onSubmit={handleSearch} className="flex flex-col lg:flex-row gap-3">
+              <div className="bg-background/60 backdrop-blur-xl border border-white/20 rounded-2xl p-3 sm:p-4 shadow-2xl">
+                <form onSubmit={handleSearch} className="flex flex-col lg:flex-row gap-2 sm:gap-3">
                   <div className="flex-1 relative">
-                    <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <SearchIcon className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 sm:w-5 h-4 sm:h-5 text-muted-foreground" />
                     <input type="text" placeholder="Enter city, neighborhood, ZIP, or address"
-                      className="w-full pl-12 pr-4 py-4 bg-background border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-4 bg-background border border-border rounded-xl text-sm sm:text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                       value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value })} />
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    <select className="px-4 py-4 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                    <select className="flex-1 sm:flex-none px-3 sm:px-4 py-3 sm:py-4 bg-background border border-border rounded-xl text-xs sm:text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 min-w-0"
                       value={filters.propertyType} onChange={(e) => setFilters({...filters, propertyType: e.target.value})}>
                       <option value="">All Types</option>
                       <option value="SINGLE_FAMILY">House</option>
@@ -292,7 +292,7 @@ function SearchContent() {
                       <option value="TOWNHOUSE">Townhome</option>
                       <option value="APARTMENT">Apartment</option>
                     </select>
-                    <select className="px-4 py-4 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    <select className="flex-1 sm:flex-none px-3 sm:px-4 py-3 sm:py-4 bg-background border border-border rounded-xl text-xs sm:text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 min-w-0"
                       value={filters.minPrice} onChange={(e) => setFilters({...filters, minPrice: e.target.value})}>
                       <option value="">Any Price</option>
                       <option value="100000">$100K+</option>
@@ -301,14 +301,14 @@ function SearchContent() {
                       <option value="400000">$400K+</option>
                       <option value="500000">$500K+</option>
                     </select>
-                    <select className="px-4 py-4 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    <select className="flex-1 sm:flex-none px-3 sm:px-4 py-3 sm:py-4 bg-background border border-border rounded-xl text-xs sm:text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 min-w-0"
                       value={filters.minBeds} onChange={(e) => setFilters({...filters, minBeds: e.target.value})}>
                       <option value="">Any Beds</option>
                       <option value="1">1+ Beds</option>
                       <option value="2">2+ Beds</option>
                       <option value="3">3+ Beds</option>
                     </select>
-                    <select className="px-4 py-4 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    <select className="flex-1 sm:flex-none px-3 sm:px-4 py-3 sm:py-4 bg-background border border-border rounded-xl text-xs sm:text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 min-w-0"
                       value={filters.minBaths} onChange={(e) => setFilters({...filters, minBaths: e.target.value})}>
                       <option value="">Any Baths</option>
                       <option value="1">1+ Baths</option>
@@ -316,8 +316,8 @@ function SearchContent() {
                       <option value="3">3+ Baths</option>
                     </select>
                   </div>
-                  <button type="submit" className="px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-                    <SearchIcon className="w-5 h-5" />
+                  <button type="submit" className="px-6 sm:px-8 py-3 sm:py-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base">
+                    <SearchIcon className="w-4 sm:w-5 h-4 sm:h-5" />
                     <span className="hidden md:inline">Search</span>
                   </button>
                 </form>

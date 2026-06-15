@@ -223,7 +223,7 @@ export default function MortgagePage() {
       </motion.header>
 
       {/* Hero */}
-      <section className="relative min-h-[60vh] flex items-center overflow-hidden pt-16">
+      <section className="relative min-h-[45vh] md:min-h-[60vh] flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=1920&q=80"
@@ -247,20 +247,20 @@ export default function MortgagePage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full mb-6"
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6"
             >
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-white/90 text-sm font-medium">Free to use &bull; No signup required</span>
+              <span className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-400 rounded-full animate-pulse" />
+              <span className="text-white/90 text-xs sm:text-sm font-medium">Free to use &bull; No signup required</span>
             </motion.div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
               Mortgage
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
                 Calculator
               </span>
             </h1>
 
-            <p className="text-lg text-white/80 mb-8 max-w-xl">
+            <p className="text-sm sm:text-base md:text-lg text-white/80 mb-6 sm:mb-8 max-w-xl">
               Plan your home purchase with our easy-to-use mortgage calculator. Get accurate monthly payment estimates instantly.
             </p>
 
@@ -268,7 +268,7 @@ export default function MortgagePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-wrap gap-3 sm:gap-4"
             >
               {[
                 { label: 'Free to use', icon: CheckCircle },
@@ -277,9 +277,9 @@ export default function MortgagePage() {
               ].map((feature, idx) => {
                 const Icon = feature.icon
                 return (
-                  <div key={idx} className="flex items-center gap-2 text-white/70">
-                    <Icon className="w-5 h-5 text-cyan-400" />
-                    <span className="text-sm">{feature.label}</span>
+                  <div key={idx} className="flex items-center gap-1.5 sm:gap-2 text-white/70">
+                    <Icon className="w-4 sm:w-5 h-4 sm:h-5 text-cyan-400" />
+                    <span className="text-xs sm:text-sm">{feature.label}</span>
                   </div>
                 )
               })}
@@ -299,25 +299,25 @@ export default function MortgagePage() {
           >
             <div className="grid grid-cols-1 lg:grid-cols-2">
               {/* Inputs */}
-              <div className="p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-border">
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                    <Calculator className="w-5 h-5 text-primary-foreground" />
+              <div className="p-4 sm:p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-border">
+                <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                  <div className="w-9 sm:w-10 h-9 sm:h-10 bg-primary rounded-xl flex items-center justify-center">
+                    <Calculator className="w-4 sm:w-5 h-4 sm:h-5 text-primary-foreground" />
                   </div>
-                  <h2 className="text-xl font-bold">Calculate Your Payment</h2>
+                  <h2 className="text-lg sm:text-xl font-bold">Calculate Your Payment</h2>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-5 sm:space-y-6">
                   {/* Home Price */}
                   <div>
                     <label className="block text-sm font-semibold mb-2">Home Price</label>
                     <div className="relative">
-                      <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                      <DollarSign className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 sm:w-5 h-4 sm:h-5 text-muted-foreground" />
                       <input
                         type="number"
                         value={calculator.homePrice}
                         onChange={(e) => setCalculator({ ...calculator, homePrice: parseFloat(e.target.value) || 0 })}
-                        className="w-full pl-12 pr-4 py-3.5 bg-secondary border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-lg font-medium"
+                        className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3.5 bg-secondary border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-base sm:text-lg font-medium"
                       />
                     </div>
                     <input
@@ -338,23 +338,23 @@ export default function MortgagePage() {
                   {/* Down Payment */}
                   <div>
                     <label className="block text-sm font-semibold mb-2">Down Payment</label>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-4">
                       <div className="relative">
-                        <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                        <DollarSign className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 sm:w-5 h-4 sm:h-5 text-muted-foreground" />
                         <input
                           type="number"
                           value={calculator.downPayment}
                           onChange={(e) => handleDownPaymentChange(parseFloat(e.target.value) || 0, false)}
-                          className="w-full pl-12 pr-4 py-3.5 bg-secondary border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-lg font-medium"
+                          className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3.5 bg-secondary border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-base sm:text-lg font-medium"
                         />
                       </div>
                       <div className="relative">
-                        <Percent className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                        <Percent className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 sm:w-5 h-4 sm:h-5 text-muted-foreground" />
                         <input
                           type="number"
                           value={calculator.downPaymentPercent}
                           onChange={(e) => handleDownPaymentChange(parseFloat(e.target.value) || 0, true)}
-                          className="w-full pl-12 pr-4 py-3.5 bg-secondary border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-lg font-medium"
+                          className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3.5 bg-secondary border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-base sm:text-lg font-medium"
                         />
                       </div>
                     </div>
@@ -377,13 +377,13 @@ export default function MortgagePage() {
                   <div>
                     <label className="block text-sm font-semibold mb-2">Interest Rate</label>
                     <div className="relative">
-                      <Percent className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                      <Percent className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 sm:w-5 h-4 sm:h-5 text-muted-foreground" />
                       <input
                         type="number"
                         step="0.125"
                         value={calculator.interestRate}
                         onChange={(e) => setCalculator({ ...calculator, interestRate: parseFloat(e.target.value) || 0 })}
-                        className="w-full pl-12 pr-4 py-3.5 bg-secondary border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-lg font-medium"
+                        className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3.5 bg-secondary border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 text-base sm:text-lg font-medium"
                       />
                     </div>
                     <input
@@ -404,18 +404,18 @@ export default function MortgagePage() {
                   {/* Loan Term */}
                   <div>
                     <label className="block text-sm font-semibold mb-2">Loan Term</label>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-3 gap-2 sm:gap-3">
                       {[15, 20, 30].map((term) => (
                         <button
                           key={term}
                           onClick={() => setCalculator({ ...calculator, loanTerm: term })}
-                          className={`py-3 px-4 rounded-xl font-medium transition-all text-sm ${
+                          className={`py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl font-medium transition-all text-xs sm:text-sm ${
                             calculator.loanTerm === term
                               ? 'bg-primary text-primary-foreground'
                               : 'bg-secondary text-muted-foreground hover:bg-secondary/80 border border-border'
                           }`}
                         >
-                          {term} years
+                          {term}yr
                         </button>
                       ))}
                     </div>
@@ -425,10 +425,10 @@ export default function MortgagePage() {
                   <div className="border border-border rounded-xl overflow-hidden">
                     <button
                       onClick={() => setShowAdditional(!showAdditional)}
-                      className="w-full flex items-center justify-between p-4 text-sm font-semibold"
+                      className="w-full flex items-center justify-between p-3 sm:p-4 text-xs sm:text-sm font-semibold"
                     >
                       Additional Costs
-                      <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform duration-300 ${showAdditional ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-4 sm:w-5 h-4 sm:h-5 text-muted-foreground transition-transform duration-300 ${showAdditional ? 'rotate-180' : ''}`} />
                     </button>
                     <AnimatePresence>
                       {showAdditional && (
@@ -485,36 +485,36 @@ export default function MortgagePage() {
               </div>
 
               {/* Results */}
-              <div className="p-6 md:p-8 bg-secondary/50">
-                <h2 className="text-xl font-bold mb-6">Estimated Monthly Payment</h2>
+              <div className="p-4 sm:p-6 md:p-8 bg-secondary/50">
+                <h2 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">Estimated Monthly Payment</h2>
 
-                <div className="text-center mb-8">
-                  <div className="text-5xl md:text-6xl font-bold text-primary">
+                <div className="text-center mb-6 sm:mb-8">
+                  <div className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary">
                     {formatCurrency(monthlyPayment.total)}
                   </div>
                   <p className="text-muted-foreground mt-2">per month</p>
                 </div>
 
-                <div className="space-y-3 mb-8">
+                <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
                   {[
                     { label: 'Principal & Interest', value: monthlyPayment.principal + monthlyPayment.interest, color: 'bg-primary' },
                     { label: 'Property Tax', value: monthlyPayment.taxes, color: 'bg-emerald-500' },
                     { label: 'Home Insurance', value: monthlyPayment.insurance, color: 'bg-blue-400' },
                     ...(monthlyPayment.hoa > 0 ? [{ label: 'HOA Fees', value: monthlyPayment.hoa, color: 'bg-purple-500' }] : []),
                   ].map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-3 bg-card rounded-xl border border-border">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-3 h-3 rounded-full ${item.color}`} />
-                        <span className="text-sm text-muted-foreground">{item.label}</span>
+                    <div key={idx} className="flex items-center justify-between p-2.5 sm:p-3 bg-card rounded-xl border border-border">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className={`w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full ${item.color}`} />
+                        <span className="text-xs sm:text-sm text-muted-foreground">{item.label}</span>
                       </div>
-                      <span className="font-semibold">{formatCurrency(item.value)}</span>
+                      <span className="text-xs sm:text-sm font-semibold">{formatCurrency(item.value)}</span>
                     </div>
                   ))}
                 </div>
 
                 {/* Visual bar */}
-                <div className="bg-card rounded-xl p-4 border border-border mb-8">
-                  <div className="h-4 rounded-full overflow-hidden flex">
+                <div className="bg-card rounded-xl p-3 sm:p-4 border border-border mb-6 sm:mb-8">
+                  <div className="h-3 sm:h-4 rounded-full overflow-hidden flex">
                     <div className="bg-primary" style={{ width: `${((monthlyPayment.principal + monthlyPayment.interest) / monthlyPayment.total) * 100}%` }} />
                     <div className="bg-emerald-500" style={{ width: `${(monthlyPayment.taxes / monthlyPayment.total) * 100}%` }} />
                     <div className="bg-blue-400" style={{ width: `${(monthlyPayment.insurance / monthlyPayment.total) * 100}%` }} />
@@ -525,9 +525,9 @@ export default function MortgagePage() {
                 </div>
 
                 {/* Loan Summary */}
-                <div className="p-4 bg-primary/5 border border-primary/10 rounded-xl">
-                  <h3 className="font-semibold mb-3">Loan Summary</h3>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="p-3 sm:p-4 bg-primary/5 border border-primary/10 rounded-xl">
+                  <h3 className="font-semibold mb-3 text-sm sm:text-base">Loan Summary</h3>
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
                     <div>
                       <p className="text-muted-foreground">Loan Amount</p>
                       <p className="font-semibold">{formatCurrency(calculator.homePrice - calculator.downPayment)}</p>

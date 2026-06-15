@@ -237,7 +237,7 @@ export default function SellPage() {
       </motion.header>
 
       {/* Hero */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden pt-16">
+      <section className="relative min-h-[50vh] md:min-h-[70vh] flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80"
@@ -261,20 +261,20 @@ export default function SellPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full mb-6"
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6"
             >
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-white/90 text-sm font-medium">Free to list &bull; No hidden fees</span>
+              <span className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-400 rounded-full animate-pulse" />
+              <span className="text-white/90 text-xs sm:text-sm font-medium">Free to list &bull; No hidden fees</span>
             </motion.div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
               Sell Your Home
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
                 With Confidence
               </span>
             </h1>
 
-            <p className="text-lg text-white/80 mb-8 max-w-xl">
+            <p className="text-sm sm:text-base md:text-lg text-white/80 mb-6 sm:mb-8 max-w-xl">
               Get the best value for your home with our modern selling platform.
               Connect with thousands of ready buyers.
             </p>

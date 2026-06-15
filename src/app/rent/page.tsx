@@ -317,7 +317,7 @@ function RentContent() {
       </motion.header>
 
       {/* Hero */}
-      <section className="relative min-h-[50vh] flex items-center overflow-hidden pt-16">
+      <section className="relative min-h-[40vh] md:min-h-[50vh] flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1920&q=80"
@@ -341,41 +341,41 @@ function RentContent() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full mb-6"
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6"
             >
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-white/90 text-sm font-medium">{pagination.total.toLocaleString()} Rentals Available</span>
+              <span className="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-green-400 rounded-full animate-pulse" />
+              <span className="text-white/90 text-xs sm:text-sm font-medium">{pagination.total.toLocaleString()} Rentals Available</span>
             </motion.div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight text-center">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight text-center">
               Find Your Perfect
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
                 Rental Home
               </span>
             </h1>
 
-            <p className="text-lg text-white/80 mb-8 text-center">Browse thousands of rental properties across the country</p>
+            <p className="text-sm sm:text-base md:text-lg text-white/80 mb-6 sm:mb-8 text-center">Browse thousands of rental properties across the country</p>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <div className="bg-background/60 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-2xl">
-                <form onSubmit={handleSearch} className="flex flex-col lg:flex-row gap-3">
+              <div className="bg-background/60 backdrop-blur-xl border border-white/20 rounded-2xl p-3 sm:p-4 shadow-2xl">
+                <form onSubmit={handleSearch} className="flex flex-col lg:flex-row gap-2 sm:gap-3">
                   <div className="flex-1 relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 sm:w-5 h-4 sm:h-5 text-muted-foreground" />
                     <input
                       type="text"
                       placeholder="Enter city, neighborhood, ZIP, or address"
-                      className="w-full pl-12 pr-4 py-4 bg-background border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-4 bg-background border border-border rounded-xl text-sm sm:text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                       value={filters.search}
                       onChange={(e) => handleFilterChange('search', e.target.value)}
                     />
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     <select
-                      className="px-4 py-4 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      className="flex-1 sm:flex-none px-3 sm:px-4 py-3 sm:py-4 bg-background border border-border rounded-xl text-xs sm:text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 min-w-0"
                       value={filters.propertyType}
                       onChange={(e) => handleFilterChange('propertyType', e.target.value)}
                     >
@@ -384,7 +384,7 @@ function RentContent() {
                       ))}
                     </select>
                     <select
-                      className="px-4 py-4 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      className="flex-1 sm:flex-none px-3 sm:px-4 py-3 sm:py-4 bg-background border border-border rounded-xl text-xs sm:text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 min-w-0"
                       value={`${filters.minPrice}-${filters.maxPrice}`}
                       onChange={(e) => {
                         const [min, max] = e.target.value.split('-')
@@ -396,7 +396,7 @@ function RentContent() {
                       ))}
                     </select>
                     <select
-                      className="px-4 py-4 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      className="flex-1 sm:flex-none px-3 sm:px-4 py-3 sm:py-4 bg-background border border-border rounded-xl text-xs sm:text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 min-w-0"
                       value={filters.minBeds}
                       onChange={(e) => handleFilterChange('minBeds', e.target.value)}
                     >
@@ -405,7 +405,7 @@ function RentContent() {
                       ))}
                     </select>
                     <select
-                      className="px-4 py-4 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      className="flex-1 sm:flex-none px-3 sm:px-4 py-3 sm:py-4 bg-background border border-border rounded-xl text-xs sm:text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 min-w-0"
                       value={filters.minBaths}
                       onChange={(e) => handleFilterChange('minBaths', e.target.value)}
                     >
@@ -414,8 +414,8 @@ function RentContent() {
                       ))}
                     </select>
                   </div>
-                  <button type="submit" className="px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-                    <Search className="w-5 h-5" />
+                  <button type="submit" className="px-6 sm:px-8 py-3 sm:py-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base">
+                    <Search className="w-4 sm:w-5 h-4 sm:h-5" />
                     <span>Search</span>
                   </button>
                 </form>

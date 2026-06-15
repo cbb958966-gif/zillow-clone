@@ -248,10 +248,10 @@ export default function PropertyDetail() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="grid grid-cols-4 gap-1 h-[500px] rounded-xl overflow-hidden"
+            className="grid grid-cols-2 md:grid-cols-4 gap-1 h-[250px] md:h-[500px] rounded-xl overflow-hidden"
           >
             {/* Main Large Image */}
-            <div className="col-span-2 row-span-2 relative cursor-pointer group" onClick={() => setLightboxIndex(0)}>
+            <div className="col-span-2 row-span-2 relative cursor-pointer group max-md:col-span-2 max-md:row-span-2" onClick={() => setLightboxIndex(0)}>
               {property.images?.[0] ? (
                 <img 
                   src={property.images[0].url} 
@@ -309,49 +309,49 @@ export default function PropertyDetail() {
                     <span className="text-sm font-medium text-muted-foreground">|</span>
                     <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{property.propertyType.replace(/_/g, ' ')}</span>
                   </div>
-                  <h1 className="text-4xl font-extrabold text-foreground mb-2 leading-tight">{property.address}</h1>
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground mb-2 leading-tight">{property.address}</h1>
                   <div className="flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-primary" />
-                    <p className="text-lg font-medium text-muted-foreground">{property.city}, {property.state} {property.zipCode}</p>
+                    <MapPin className="w-4 sm:w-5 h-4 sm:h-5 text-primary flex-shrink-0" />
+                    <p className="text-sm sm:text-base md:text-lg font-medium text-muted-foreground">{property.city}, {property.state} {property.zipCode}</p>
                   </div>
                 </div>
               </div>
               
               {/* Key Facts Bar - Modern Style */}
-              <div className="flex flex-wrap items-center gap-4 mt-6 pt-6 border-t border-border">
-                <div className="flex items-center gap-2 bg-secondary px-4 py-2 rounded-xl">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Bed className="w-5 h-5 text-primary" />
+              <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-4 mt-6 pt-6 border-t border-border">
+                <div className="flex items-center gap-2 bg-secondary px-3 sm:px-4 py-2 rounded-xl">
+                  <div className="w-8 sm:w-10 h-8 sm:h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Bed className="w-4 sm:w-5 h-4 sm:h-5 text-primary" />
                   </div>
                   <div>
-                    <span className="block font-bold text-foreground text-lg">{property.beds || '--'}</span>
+                    <span className="block font-bold text-foreground text-base sm:text-lg">{property.beds || '--'}</span>
                     <span className="text-xs text-muted-foreground">Beds</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 bg-secondary px-4 py-2 rounded-xl">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Bath className="w-5 h-5 text-primary" />
+                <div className="flex items-center gap-2 bg-secondary px-3 sm:px-4 py-2 rounded-xl">
+                  <div className="w-8 sm:w-10 h-8 sm:h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Bath className="w-4 sm:w-5 h-4 sm:h-5 text-primary" />
                   </div>
                   <div>
-                    <span className="block font-bold text-foreground text-lg">{property.baths ? (Number.isInteger(property.baths) ? property.baths : property.baths.toFixed(1)) : '--'}</span>
+                    <span className="block font-bold text-foreground text-base sm:text-lg">{property.baths ? (Number.isInteger(property.baths) ? property.baths : property.baths.toFixed(1)) : '--'}</span>
                     <span className="text-xs text-muted-foreground">Baths</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 bg-secondary px-4 py-2 rounded-xl">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Square className="w-5 h-5 text-primary" />
+                <div className="flex items-center gap-2 bg-secondary px-3 sm:px-4 py-2 rounded-xl">
+                  <div className="w-8 sm:w-10 h-8 sm:h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Square className="w-4 sm:w-5 h-4 sm:h-5 text-primary" />
                   </div>
                   <div>
-                    <span className="block font-bold text-foreground text-lg">{property.sqft?.toLocaleString() || '--'}</span>
+                    <span className="block font-bold text-foreground text-base sm:text-lg">{property.sqft?.toLocaleString() || '--'}</span>
                     <span className="text-xs text-muted-foreground">Sq Ft</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 bg-secondary px-4 py-2 rounded-xl">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-primary" />
+                <div className="flex items-center gap-2 bg-secondary px-3 sm:px-4 py-2 rounded-xl">
+                  <div className="w-8 sm:w-10 h-8 sm:h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Calendar className="w-4 sm:w-5 h-4 sm:h-5 text-primary" />
                   </div>
                   <div>
-                    <span className="block font-bold text-foreground text-lg">{property.yearBuilt || '--'}</span>
+                    <span className="block font-bold text-foreground text-base sm:text-lg">{property.yearBuilt || '--'}</span>
                     <span className="text-xs text-muted-foreground">Year Built</span>
                   </div>
                 </div>
@@ -368,7 +368,7 @@ export default function PropertyDetail() {
               <div className="flex items-end justify-between">
                 <div>
                   <div className="text-sm font-semibold text-muted-foreground mb-1">Listing Price</div>
-                  <div className="text-5xl font-extrabold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
+                  <div className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
                     ${property.price.toLocaleString()}
                   </div>
                   {pricePerSqftFormatted && (
@@ -411,13 +411,13 @@ export default function PropertyDetail() {
               transition={{ delay: 0.5 }}
               className="rounded-2xl bg-card border border-border overflow-hidden"
             >
-              <div className="border-b border-border">
-                <div className="flex">
+              <div className="border-b border-border overflow-x-auto">
+                <div className="flex min-w-max md:min-w-0">
                   {['overview', 'facts', 'tax', 'nearby'].map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`flex-1 px-4 py-4 text-sm font-medium capitalize border-b-2 transition-colors ${
+                      className={`flex-1 px-3 md:px-4 py-3 md:py-4 text-xs md:text-sm font-medium capitalize border-b-2 transition-colors whitespace-nowrap ${
                         activeTab === tab
                           ? 'border-primary text-primary'
                           : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -436,87 +436,87 @@ export default function PropertyDetail() {
                       <h3 className="text-lg font-semibold text-foreground mb-3">About this home</h3>
                       <p className="text-muted-foreground leading-relaxed">{property.description}</p>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="text-center p-4 bg-secondary rounded-lg">
-                        <Building2 className="w-6 h-6 mx-auto mb-2 text-primary" />
-                        <div className="font-semibold">{property.propertyType.replace(/_/g, ' ')}</div>
-                        <div className="text-sm text-muted-foreground">Type</div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
+                      <div className="text-center p-3 sm:p-4 bg-secondary rounded-lg">
+                        <Building2 className="w-5 sm:w-6 h-5 sm:h-6 mx-auto mb-1.5 sm:mb-2 text-primary" />
+                        <div className="font-semibold text-sm sm:text-base">{property.propertyType.replace(/_/g, ' ')}</div>
+                        <div className="text-xs sm:text-sm text-muted-foreground">Type</div>
                       </div>
-                      <div className="text-center p-4 bg-secondary rounded-lg">
-                        <Calendar className="w-6 h-6 mx-auto mb-2 text-primary" />
-                        <div className="font-semibold">{property.yearBuilt || 'N/A'}</div>
-                        <div className="text-sm text-muted-foreground">Year Built</div>
+                      <div className="text-center p-3 sm:p-4 bg-secondary rounded-lg">
+                        <Calendar className="w-5 sm:w-6 h-5 sm:h-6 mx-auto mb-1.5 sm:mb-2 text-primary" />
+                        <div className="font-semibold text-sm sm:text-base">{property.yearBuilt || 'N/A'}</div>
+                        <div className="text-xs sm:text-sm text-muted-foreground">Year Built</div>
                       </div>
-                      <div className="text-center p-4 bg-secondary rounded-lg">
-                        <Square className="w-6 h-6 mx-auto mb-2 text-primary" />
-                        <div className="font-semibold">{property.lotSize?.toFixed(2) || 'N/A'}</div>
-                        <div className="text-sm text-muted-foreground">Acres</div>
+                      <div className="text-center p-3 sm:p-4 bg-secondary rounded-lg">
+                        <Square className="w-5 sm:w-6 h-5 sm:h-6 mx-auto mb-1.5 sm:mb-2 text-primary" />
+                        <div className="font-semibold text-sm sm:text-base">{property.lotSize?.toFixed(2) || 'N/A'}</div>
+                        <div className="text-xs sm:text-sm text-muted-foreground">Acres</div>
                       </div>
-                      <div className="text-center p-4 bg-secondary rounded-lg">
-                        <DollarSign className="w-6 h-6 mx-auto mb-2 text-primary" />
-                        <div className="font-semibold">${property.price.toLocaleString()}</div>
-                        <div className="text-sm text-muted-foreground">Price</div>
+                      <div className="text-center p-3 sm:p-4 bg-secondary rounded-lg">
+                        <DollarSign className="w-5 sm:w-6 h-5 sm:h-6 mx-auto mb-1.5 sm:mb-2 text-primary" />
+                        <div className="font-semibold text-sm sm:text-base">${property.price.toLocaleString()}</div>
+                        <div className="text-xs sm:text-sm text-muted-foreground">Price</div>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {activeTab === 'facts' && (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                     <div className="flex items-center gap-3 p-3 bg-secondary rounded-lg">
-                      <Home className="w-5 h-5 text-primary" />
-                      <div>
-                        <div className="text-sm text-muted-foreground">Property Type</div>
-                        <div className="font-medium">{property.propertyType.replace(/_/g, ' ')}</div>
+                      <Home className="w-5 h-5 text-primary flex-shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm text-muted-foreground">Property Type</div>
+                        <div className="font-medium text-sm sm:text-base truncate">{property.propertyType.replace(/_/g, ' ')}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-secondary rounded-lg">
-                      <Calendar className="w-5 h-5 text-primary" />
-                      <div>
-                        <div className="text-sm text-muted-foreground">Year Built</div>
-                        <div className="font-medium">{property.yearBuilt || 'N/A'}</div>
+                      <Calendar className="w-5 h-5 text-primary flex-shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm text-muted-foreground">Year Built</div>
+                        <div className="font-medium text-sm sm:text-base">{property.yearBuilt || 'N/A'}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-secondary rounded-lg">
-                      <Layers className="w-5 h-5 text-primary" />
-                      <div>
-                        <div className="text-sm text-muted-foreground">Lot Size</div>
-                        <div className="font-medium">{property.lotSize?.toFixed(2)} acres</div>
+                      <Layers className="w-5 h-5 text-primary flex-shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm text-muted-foreground">Lot Size</div>
+                        <div className="font-medium text-sm sm:text-base">{property.lotSize?.toFixed(2)} acres</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-secondary rounded-lg">
-                      <Ruler className="w-5 h-5 text-primary" />
-                      <div>
-                        <div className="text-sm text-muted-foreground">Living Area</div>
-                        <div className="font-medium">{property.sqft?.toLocaleString()} sqft</div>
+                      <Ruler className="w-5 h-5 text-primary flex-shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm text-muted-foreground">Living Area</div>
+                        <div className="font-medium text-sm sm:text-base">{property.sqft?.toLocaleString()} sqft</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-secondary rounded-lg">
-                      <Car className="w-5 h-5 text-primary" />
-                      <div>
-                        <div className="text-sm text-muted-foreground">Parking</div>
-                        <div className="font-medium">2 Car Garage</div>
+                      <Car className="w-5 h-5 text-primary flex-shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm text-muted-foreground">Parking</div>
+                        <div className="font-medium text-sm sm:text-base">2 Car Garage</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-secondary rounded-lg">
-                      <Flame className="w-5 h-5 text-primary" />
-                      <div>
-                        <div className="text-sm text-muted-foreground">Heating</div>
-                        <div className="font-medium">Central</div>
+                      <Flame className="w-5 h-5 text-primary flex-shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm text-muted-foreground">Heating</div>
+                        <div className="font-medium text-sm sm:text-base">Central</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-secondary rounded-lg">
-                      <Waves className="w-5 h-5 text-primary" />
-                      <div>
-                        <div className="text-sm text-muted-foreground">Cooling</div>
-                        <div className="font-medium">Central AC</div>
+                      <Waves className="w-5 h-5 text-primary flex-shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm text-muted-foreground">Cooling</div>
+                        <div className="font-medium text-sm sm:text-base">Central AC</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-secondary rounded-lg">
-                      <Trees className="w-5 h-5 text-primary" />
-                      <div>
-                        <div className="text-sm text-muted-foreground">Lot</div>
-                        <div className="font-medium">0.25 acres</div>
+                      <Trees className="w-5 h-5 text-primary flex-shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-xs sm:text-sm text-muted-foreground">Lot</div>
+                        <div className="font-medium text-sm sm:text-base">0.25 acres</div>
                       </div>
                     </div>
                   </div>
@@ -556,16 +556,16 @@ export default function PropertyDetail() {
                 {activeTab === 'nearby' && (
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-foreground">What's nearby</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                       {nearbyPlaces.map((place, idx) => (
                         <div key={idx} className="flex items-center gap-3 p-3 bg-secondary rounded-lg">
-                          <place.icon className="w-5 h-5 text-muted-foreground" />
-                          <div className="flex-1">
-                            <div className="text-sm font-medium">{place.name}</div>
+                          <place.icon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium truncate">{place.name}</div>
                             <div className="text-xs text-muted-foreground">{place.distance}</div>
                           </div>
                           {place.rating && (
-                            <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded">
+                            <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded flex-shrink-0">
                               {place.rating}/10
                             </span>
                           )}

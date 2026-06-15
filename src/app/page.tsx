@@ -212,7 +212,7 @@ export default function HomePage() {
       </motion.header>
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden pt-16">
+      <section className="relative min-h-[70vh] md:min-h-[90vh] flex items-center overflow-hidden pt-16">
         <div className="absolute inset-0">
           {heroImages.map((img, idx) => (
             <motion.div
@@ -246,14 +246,14 @@ export default function HomePage() {
               <span className="text-white/90 text-sm font-medium">{properties.length > 0 ? `${properties.length * 1000}+` : '50,000+'} Active Listings</span>
             </motion.div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
               Find Your
               <span className="block text-primary-foreground bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                 Dream Home
               </span>
             </h1>
             
-            <p className="text-lg text-white/80 mb-8 max-w-xl">
+            <p className="text-sm sm:text-base md:text-lg text-white/80 mb-6 sm:mb-8 max-w-xl">
               Discover thousands of properties across the country. Your perfect home is just a search away.
             </p>
 
@@ -262,20 +262,20 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: 0.4 }}
               onSubmit={handleSearch}
-              className="flex flex-col sm:flex-row gap-3 max-w-2xl mb-6"
+              className="flex flex-col sm:flex-row gap-2 sm:gap-3 max-w-2xl mb-6"
             >
               <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 sm:w-5 h-4 sm:h-5 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder="Enter city, neighborhood, ZIP..."
-                  className="w-full pl-12 pr-4 py-4 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-4 bg-background border border-border rounded-xl text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary/50"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <button type="submit" className="px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-                <Search className="w-5 h-5" />
+              <button type="submit" className="px-6 sm:px-8 py-3 sm:py-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base">
+                <Search className="w-4 sm:w-5 h-4 sm:h-5" />
                 Search
               </button>
             </motion.form>
@@ -284,10 +284,10 @@ export default function HomePage() {
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
               transition={{ delay: 0.6 }}
-              className="flex flex-wrap gap-3"
+              className="flex flex-wrap gap-2 sm:gap-3"
             >
               {['Houses', 'Apartments', 'Condos', 'Townhomes'].map((tag) => (
-                <Link key={tag} href={`/search?type=${tag.toUpperCase().slice(0, -1)}`} className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white text-sm hover:bg-white/20 transition-colors">
+                <Link key={tag} href={`/search?type=${tag.toUpperCase().slice(0, -1)}`} className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white text-xs sm:text-sm hover:bg-white/20 transition-colors">
                   {tag}
                 </Link>
               ))}
@@ -298,12 +298,12 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 40 }} 
             animate={{ opacity: 1, y: 0 }} 
             transition={{ delay: 0.8 }}
-            className="flex flex-wrap gap-6 mt-12"
+            className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3 sm:gap-6 mt-8 sm:mt-12"
           >
             {stats.map((stat, idx) => (
-              <div key={idx} className="flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-5 py-3">
-                <div className="text-2xl font-bold text-white">{stat.value}</div>
-                <div className="text-sm text-white/70">{stat.label}</div>
+              <div key={idx} className="flex items-center gap-2 sm:gap-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-3 sm:px-5 py-2 sm:py-3">
+                <div className="text-lg sm:text-2xl font-bold text-white">{stat.value}</div>
+                <div className="text-xs sm:text-sm text-white/70">{stat.label}</div>
               </div>
             ))}
           </motion.div>

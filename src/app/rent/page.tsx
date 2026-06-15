@@ -246,7 +246,7 @@ function RentContent() {
                   className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                     pathname === link.href
                       ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                      : 'text-foreground/70 hover:text-foreground hover:bg-secondary/50'
                   }`}
                 >
                   {link.label}
@@ -258,7 +258,7 @@ function RentContent() {
               <ThemeToggle />
               {user ? (
                 <div className="flex items-center gap-3">
-                  <Link href="/dashboard/saved" className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-lg transition-colors">
+                  <Link href="/dashboard/saved" className="p-2 text-foreground/70 hover:text-foreground hover:bg-secondary rounded-lg transition-colors">
                     <Heart className="w-5 h-5" />
                   </Link>
                   <Link href="/dashboard" className="flex items-center gap-2 hover:bg-secondary rounded-lg p-2 transition-colors">
@@ -267,11 +267,11 @@ function RentContent() {
                     </div>
                     <span className="font-medium text-sm">{user.firstName}</span>
                   </Link>
-                  <button onClick={handleSignOut} className="text-sm text-muted-foreground hover:text-foreground">Sign Out</button>
+                  <button onClick={handleSignOut} className="text-sm text-foreground/70 hover:text-foreground">Sign Out</button>
                 </div>
               ) : (
                 <>
-                  <Link href="/auth/signin" className="px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg transition-colors">Sign In</Link>
+                  <Link href="/auth/signin" className="px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-secondary rounded-lg transition-colors">Sign In</Link>
                   <Link href="/auth/signup" className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">Get Started</Link>
                 </>
               )}
@@ -293,20 +293,20 @@ function RentContent() {
             >
               <div className="px-4 py-4 space-y-2">
                 {['Browse', 'Buy', 'Rent', 'Sell', 'Mortgage'].map((link) => (
-                  <Link key={link} href={`/${link.toLowerCase() === 'browse' ? 'search' : link.toLowerCase()}`} className="block px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">
+                  <Link key={link} href={`/${link.toLowerCase() === 'browse' ? 'search' : link.toLowerCase()}`} className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">
                     {link}
                   </Link>
                 ))}
                 <hr className="my-2 border-border" />
                 {user ? (
                   <>
-                    <Link href="/dashboard" className="block px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">Dashboard</Link>
-                    <Link href="/dashboard/saved" className="block px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">Saved</Link>
-                    <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">Sign Out</button>
+                    <Link href="/dashboard" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Dashboard</Link>
+                    <Link href="/dashboard/saved" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Saved</Link>
+                    <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Sign Out</button>
                   </>
                 ) : (
                   <>
-                    <Link href="/auth/signin" className="block px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">Sign In</Link>
+                    <Link href="/auth/signin" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Sign In</Link>
                     <Link href="/auth/signup" className="block px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg text-center">Get Started</Link>
                   </>
                 )}

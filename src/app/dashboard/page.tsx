@@ -179,7 +179,7 @@ export default function Dashboard() {
                   className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                     pathname === link.href
                       ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                      : 'text-foreground/70 hover:text-foreground hover:bg-secondary/50'
                   }`}
                 >
                   {link.label}
@@ -189,7 +189,7 @@ export default function Dashboard() {
 
             <div className="hidden md:flex items-center gap-3">
               <ThemeToggle />
-              <button className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-lg transition-colors relative">
+              <button className="p-2 text-foreground/70 hover:text-foreground hover:bg-secondary rounded-lg transition-colors relative">
                 <Bell className="w-5 h-5" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
@@ -217,14 +217,14 @@ export default function Dashboard() {
             >
               <div className="px-4 py-4 space-y-2">
                 {navLinks.map((link) => (
-                  <Link key={link.href} href={link.href} className="block px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">
+                  <Link key={link.href} href={link.href} className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">
                     {link.label}
                   </Link>
                 ))}
                 <hr className="my-2 border-border" />
-                <Link href="/dashboard" className="block px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">Dashboard</Link>
-                <Link href="/dashboard/saved" className="block px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">Saved Properties</Link>
-                {user.role === 'ADMIN' && <Link href="/admin" className="block px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">Admin</Link>}
+                <Link href="/dashboard" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Dashboard</Link>
+                <Link href="/dashboard/saved" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Saved Properties</Link>
+                {user.role === 'ADMIN' && <Link href="/admin" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Admin</Link>}
                 <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm font-medium text-red-500 hover:bg-secondary rounded-lg">
                   Sign Out
                 </button>

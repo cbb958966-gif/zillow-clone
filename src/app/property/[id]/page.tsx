@@ -627,7 +627,7 @@ export default function PropertyDetail() {
 
               {showContactForm && (
                 <div className="mt-6 pt-6 border-t border-border">
-                  <button onClick={() => setShowContactForm(false)} className="mb-4 text-sm text-muted-foreground hover:text-foreground">
+                  <button onClick={() => setShowContactForm(false)} className="mb-4 text-sm text-foreground/70 hover:text-foreground">
                     ← Back
                   </button>
                   <ContactAgentForm propertyId={property.id} propertyTitle={property.title} />

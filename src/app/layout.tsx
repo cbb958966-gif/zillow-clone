@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { NextAuthProvider } from '@/components/NextAuthProvider';
+import ToastContainerWrapper from '@/components/ToastContainerWrapper';
 import { Inter } from 'next/font/google';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -46,21 +46,10 @@ export default function RootLayout({
               <ErrorBoundary>
                 {children}
               </ErrorBoundary>
+              <ToastContainerWrapper />
             </ThemeProvider>
           </AuthProvider>
         </NextAuthProvider>
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
       </body>
     </html>
   );

@@ -1,12 +1,13 @@
-'use client';
+'use client'
 
-import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useAuth } from '@/context/AuthContext';
-import ThemeToggle from '@/components/ThemeToggle';
-import { Heart, Home, Bed, Bath, Square, MapPin, Menu, X, Trash2, ChevronRight, User, Settings, LogOut, Search } from 'lucide-react';
+import { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams, usePathname } from 'next/navigation'
+import Link from 'next/link'
+import Image from 'next/image'
+import { useAuth } from '@/context/AuthContext'
+import { motion, AnimatePresence } from 'framer-motion'
+import ThemeToggle from '@/components/ThemeToggle'
+import { Heart, Home, Bed, Bath, Square, MapPin, Menu, X, Trash2, ChevronRight, User, Settings, LogOut, Search } from 'lucide-react'
 
 interface Property {
   id: string;
@@ -25,9 +26,13 @@ interface Property {
   }>;
 }
 
+const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } }
+const item = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }
+
 function SavedContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { user, token, logout } = useAuth();
   const [savedProperties, setSavedProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
@@ -108,82 +113,128 @@ function SavedContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0066cc]"></div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-700">
-        <div className="container-main">
-          <div className="flex items-center justify-between h-20">
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:scale-110 transition-transform">
-                <Home className="w-6 h-6 text-white" />
+              <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
+                <Home className="w-5 h-5 text-white" />
               </div>
-              <span className="text-2xl font-bold text-gray-900 dark:text-white">HomeVista</span>
+              <span className="text-xl font-bold tracking-tight">HomeVista</span>
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-2">
+            <nav className="hidden md:flex items-center gap-1">
               {[
+                { href: '/search', label: 'Browse' },
                 { href: '/buy', label: 'Buy' },
                 { href: '/rent', label: 'Rent' },
                 { href: '/sell', label: 'Sell' },
-                { href: '/search', label: 'Browse' },
                 { href: '/mortgage', label: 'Mortgage' },
               ].map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="px-4 py-2 rounded-xl font-medium text-gray-700 dark:text-gray-200 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                    pathname === link.href || (link.href === '/sell' && pathname.startsWith('/sell'))
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                  }`}
                 >
                   {link.label}
                 </Link>
               ))}
             </nav>
 
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-3">
               <ThemeToggle />
-              <button onClick={handleSignOut} className="px-4 py-2 rounded-xl font-medium text-gray-700 hover:text-cyan-600 hover:bg-gray-100 transition-all duration-300">
-                Sign Out
-              </button>
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <Link href="/dashboard/saved" className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-lg transition-colors">
+                    <Heart className="w-5 h-5" />
+                  </Link>
+                  <Link href="/dashboard" className="flex items-center gap-2 hover:bg-secondary rounded-lg p-2 transition-colors">
+                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">{user.firstName?.[0] || 'U'}</span>
+                    </div>
+                    <span className="font-medium text-sm">{user.firstName}</span>
+                  </Link>
+                  <button onClick={handleSignOut} className="text-sm text-muted-foreground hover:text-foreground">Sign Out</button>
+                </div>
+              ) : (
+                <>
+                  <Link href="/auth/signin" className="px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg transition-colors">Sign In</Link>
+                  <Link href="/auth/signup" className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">Get Started</Link>
+                </>
+              )}
             </div>
 
-            <button className="lg:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
 
-        {mobileMenuOpen && (
-          <div className="lg:hidden bg-white border-t border-gray-100 py-6 px-4 shadow-xl">
-            <div className="flex flex-col space-y-4">
-              <Link href="/search" className="text-gray-700 hover:text-[#0066cc] font-medium py-2">Browse</Link>
-              <Link href="/dashboard/profile" className="text-gray-700 hover:text-[#0066cc] font-medium py-2">Profile</Link>
-              <button onClick={handleSignOut} className="text-left text-gray-700 hover:text-[#0066cc] font-medium py-2">Sign Out</button>
-            </div>
-          </div>
-        )}
-      </header>
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-t border-border bg-background"
+            >
+              <div className="px-4 py-4 space-y-2">
+                {['Browse', 'Buy', 'Rent', 'Sell', 'Mortgage'].map((link) => (
+                  <Link key={link} href={`/${link.toLowerCase() === 'browse' ? 'search' : link.toLowerCase()}`} className="block px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">
+                    {link}
+                  </Link>
+                ))}
+                <hr className="my-2 border-border" />
+                {user ? (
+                  <>
+                    <Link href="/dashboard" className="block px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">Dashboard</Link>
+                    <Link href="/dashboard/saved" className="block px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">Saved</Link>
+                    <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">Sign Out</button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/auth/signin" className="block px-4 py-2 text-sm font-medium hover:bg-secondary rounded-lg">Sign In</Link>
+                    <Link href="/auth/signup" className="block px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg text-center">Get Started</Link>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
 
       {/* Main Content */}
-      <div className="container-main pt-28 pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <aside className="lg:w-64 shrink-0">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 sticky top-28">
-              <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-100">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#0066cc] to-[#0052a3] rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold text-lg">
+            <div className="bg-card rounded-2xl p-6 border border-border sticky top-28">
+              <div className="flex items-center gap-3 mb-6 pb-6 border-b border-border">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center">
+                  <span className="text-primary-foreground font-semibold text-lg">
                     {user?.firstName ? user.firstName[0].toUpperCase() : 'U'}
                   </span>
                 </div>
                 <div>
-                  <div className="font-semibold text-[#1a1a2e]">{user?.firstName || 'User'}</div>
-                  <div className="text-sm text-gray-500">{user?.email || ''}</div>
+                  <div className="font-semibold text-foreground">{user?.firstName || 'User'}</div>
+                  <div className="text-sm text-muted-foreground">{user?.email || ''}</div>
                 </div>
               </div>
 
@@ -194,8 +245,8 @@ function SavedContent() {
                     href={item.href}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                       activeTab === item.id
-                        ? 'bg-[#0066cc] text-white'
-                        : 'text-gray-600 hover:bg-gray-50'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-muted-foreground hover:bg-secondary'
                     }`}
                   >
                     <item.icon className="w-5 h-5" />
@@ -208,44 +259,53 @@ function SavedContent() {
 
           {/* Content */}
           <main className="flex-1">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <div className="bg-card rounded-2xl p-6 border border-border">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-2xl font-bold text-[#1a1a2e] mb-1">Saved Homes</h1>
-                  <p className="text-gray-500">{savedProperties.length} properties saved</p>
+                  <h1 className="text-2xl font-bold text-foreground mb-1">Saved Homes</h1>
+                  <p className="text-muted-foreground">{savedProperties.length} properties saved</p>
                 </div>
-                <Link href="/search" className="btn-primary flex items-center gap-2">
+                <Link href="/search" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-colors">
                   <Search className="w-4 h-4" />
                   Browse More
                 </Link>
               </div>
 
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6">
+                <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-xl mb-6">
                   {error}
                 </div>
               )}
 
               {savedProperties.length === 0 ? (
-                <div className="text-center py-16">
-                  <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Heart className="w-10 h-10 text-gray-400" />
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center py-16"
+                >
+                  <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Heart className="w-10 h-10 text-muted-foreground" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No saved properties</h3>
-                  <p className="text-gray-500 mb-6">Start browsing and save properties you're interested in!</p>
-                  <Link href="/search" className="btn-primary inline-flex items-center gap-2">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">No saved properties</h3>
+                  <p className="text-muted-foreground mb-6">Start browsing and save properties you're interested in!</p>
+                  <Link href="/search" className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-colors">
                     Browse Properties <ChevronRight className="w-4 h-4" />
                   </Link>
-                </div>
+                </motion.div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <motion.div
+                  variants={container}
+                  initial="hidden"
+                  animate="show"
+                  className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                >
                   {savedProperties.map((property) => {
                     const primaryImage = property.images?.find(img => img.isPrimary) || property.images?.[0];
-                    
+
                     return (
-                      <div key={property.id} className="property-card group">
+                      <motion.div key={property.id} variants={item} className="rounded-2xl bg-card border border-border overflow-hidden group">
                         <Link href={`/property/${property.id}`}>
-                          <div className="property-card-image">
+                          <div className="relative aspect-[4/3] overflow-hidden">
                             {primaryImage ? (
                               <Image
                                 src={primaryImage.url}
@@ -254,11 +314,11 @@ function SavedContent() {
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                               />
                             ) : (
-                              <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                                <Home className="w-12 h-12 text-gray-400" />
+                              <div className="w-full h-full bg-muted flex items-center justify-center">
+                                <Home className="w-12 h-12 text-muted-foreground" />
                               </div>
                             )}
-                            <span className="property-card-badge sale">For Sale</span>
+                            <span className="absolute top-3 left-3 px-3 py-1 bg-green-500 text-white text-xs font-medium rounded-full">For Sale</span>
                             <button
                               type="button"
                               onClick={(e) => {
@@ -267,64 +327,115 @@ function SavedContent() {
                                 removeSavedProperty(property.id);
                               }}
                               disabled={removingId === property.id}
-                              className="property-card-favorite active"
+                              className="absolute top-3 right-3 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
                               title="Remove from saved"
                             >
                               {removingId === property.id ? (
-                                <div className="w-5 h-5 border-2 border-gray-400 border-t-gray-600 rounded-full animate-spin" />
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                               ) : (
-                                <Heart className="w-5 h-5 fill-current text-white" />
+                                <Heart className="w-4 h-4 fill-white text-white" />
                               )}
                             </button>
-                          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-                            <div className="property-card-price">
+                            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
                               <span className="text-2xl font-bold text-white">
                                 {formatPrice(property.price)}
                               </span>
                             </div>
                           </div>
-                          </div>
                         </Link>
 
                         <div className="p-5">
                           <Link href={`/property/${property.id}`}>
-                            <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2 line-clamp-1 group-hover:text-[#0066cc] transition-colors">
+                            <h3 className="text-lg font-semibold text-foreground mb-2 line-clamp-1 group-hover:text-primary transition-colors">
                               {property.title}
                             </h3>
                           </Link>
-                          <div className="flex items-center gap-1 text-gray-500 text-sm mb-4">
+                          <div className="flex items-center gap-1 text-muted-foreground text-sm mb-4">
                             <MapPin className="w-4 h-4 shrink-0" />
                             <span className="line-clamp-1">{property.address}, {property.city}, {property.state}</span>
                           </div>
-                          
-                          <div className="property-card-details">
+
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
                             {property.beds && property.beds > 0 && (
-                              <span><Bed className="w-4 h-4" />{property.beds} bed</span>
+                              <span className="flex items-center gap-1.5"><Bed className="w-4 h-4" />{property.beds} bed</span>
                             )}
                             {property.baths && property.baths > 0 && (
-                              <span><Bath className="w-4 h-4" />{Math.floor(property.baths)} bath</span>
+                              <span className="flex items-center gap-1.5"><Bath className="w-4 h-4" />{Math.floor(property.baths)} bath</span>
                             )}
                             {property.sqft && property.sqft > 0 && (
-                              <span><Square className="w-4 h-4" />{property.sqft.toLocaleString()} sqft</span>
+                              <span className="flex items-center gap-1.5"><Square className="w-4 h-4" />{property.sqft.toLocaleString()} sqft</span>
                             )}
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     );
                   })}
-                </div>
+                </motion.div>
               )}
             </div>
           </main>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="bg-secondary text-secondary-foreground py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            <div className="col-span-2 md:col-span-1">
+              <Link href="/" className="flex items-center gap-2 mb-4">
+                <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
+                  <Home className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl font-bold">HomeVista</span>
+              </Link>
+              <p className="text-sm text-muted-foreground">Your trusted partner in finding the perfect home.</p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">Quick Links</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/search" className="hover:text-foreground">Browse</Link></li>
+                <li><Link href="/buy" className="hover:text-foreground">Buy</Link></li>
+                <li><Link href="/rent" className="hover:text-foreground">Rent</Link></li>
+                <li><Link href="/sell" className="hover:text-foreground">Sell</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">Resources</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/mortgage" className="hover:text-foreground">Mortgage Calculator</Link></li>
+                <li><Link href="/agent" className="hover:text-foreground">Find Agents</Link></li>
+                <li><Link href="/help" className="hover:text-foreground">Help Center</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">Company</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/about" className="hover:text-foreground">About Us</Link></li>
+                <li><Link href="/contact" className="hover:text-foreground">Contact</Link></li>
+                <li><Link href="/privacy" className="hover:text-foreground">Privacy</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-sm text-muted-foreground">&copy; 2026 HomeVista. All rights reserved.</p>
+            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <Link href="/terms" className="hover:text-foreground">Terms</Link>
+              <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
 
 export default function SavedPropertiesPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0066cc]"></div></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>}>
       <SavedContent />
     </Suspense>
   );

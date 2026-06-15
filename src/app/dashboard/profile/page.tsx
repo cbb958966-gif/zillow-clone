@@ -145,11 +145,11 @@ export default function UserProfile() {
 
       {/* Profile Information */}
       <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Profile Information</h3>
+        <h3 className="text-lg font-medium text-foreground mb-4">Profile Information</h3>
         <form onSubmit={handleProfileUpdate} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="text-sm font-medium text-foreground mb-1">
                 First Name
               </label>
               <input
@@ -157,11 +157,11 @@ export default function UserProfile() {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="text-sm font-medium text-foreground mb-1">
                 Last Name
               </label>
               <input
@@ -169,28 +169,28 @@ export default function UserProfile() {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="text-sm font-medium text-foreground mb-1">
               Email Address
             </label>
             <input
               type="email"
               value={formData.email}
               disabled
-              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500"
+              className="w-full px-3 py-2 border border-border rounded-xl bg-secondary text-muted-foreground cursor-not-allowed"
             />
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               Contact support to change your email address
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="text-sm font-medium text-foreground mb-1">
               Phone Number
             </label>
             <input
@@ -198,7 +198,7 @@ export default function UserProfile() {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
           </div>
 
@@ -206,7 +206,7 @@ export default function UserProfile() {
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
               {loading ? 'Updating...' : 'Update Profile'}
             </button>
@@ -216,10 +216,10 @@ export default function UserProfile() {
 
       {/* Change Password */}
       <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Change Password</h3>
+        <h3 className="text-lg font-medium text-foreground mb-4">Change Password</h3>
         <form onSubmit={handlePasswordUpdate} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="text-sm font-medium text-foreground mb-1">
               Current Password
             </label>
             <input
@@ -228,13 +228,13 @@ export default function UserProfile() {
               value={formData.currentPassword}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="text-sm font-medium text-foreground mb-1">
                 New Password
               </label>
               <input
@@ -244,11 +244,11 @@ export default function UserProfile() {
                 onChange={handleChange}
                 required
                 minLength={6}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="text-sm font-medium text-foreground mb-1">
                 Confirm New Password
               </label>
               <input
@@ -258,7 +258,7 @@ export default function UserProfile() {
                 onChange={handleChange}
                 required
                 minLength={6}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border rounded-xl bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               />
             </div>
           </div>
@@ -267,7 +267,7 @@ export default function UserProfile() {
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
               {loading ? 'Updating...' : 'Change Password'}
             </button>
@@ -277,18 +277,18 @@ export default function UserProfile() {
 
       {/* Account Information */}
       <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Account Information</h3>
-        <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+        <h3 className="text-lg font-medium text-foreground mb-4">Account Information</h3>
+        <div className="bg-secondary rounded-xl p-4 space-y-2">
           <div className="flex justify-between">
-            <span className="text-gray-600">Account Type:</span>
+            <span className="text-muted-foreground">Account Type:</span>
             <span className="font-medium capitalize">{user?.role}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Member Since:</span>
+            <span className="text-muted-foreground">Member Since:</span>
             <span className="font-medium">{user ? new Date((user as any).createdAt || Date.now()).toLocaleDateString() : 'N/A'}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Last Updated:</span>
+            <span className="text-muted-foreground">Last Updated:</span>
             <span className="font-medium">{user ? new Date((user as any).updatedAt || Date.now()).toLocaleDateString() : 'N/A'}</span>
           </div>
         </div>

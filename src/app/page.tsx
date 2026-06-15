@@ -37,10 +37,10 @@ const heroImages = [
 ]
 
 const categories = [
-  { title: 'House', count: '2.5M+', image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80', href: '/search?type=SINGLE_FAMILY' },
-  { title: 'Apartment', count: '800K+', image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80', href: '/search?type=APARTMENT' },
-  { title: 'Condo', count: '450K+', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80', href: '/search?type=CONDO' },
-  { title: 'Townhouse', count: '1.2M+', image: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800&q=80', href: '/search?type=TOWNHOUSE' },
+  { title: 'House', count: '2.5M+', image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80', href: '/search?type=SINGLE_FAMILY', icon: Home, desc: 'Single-family homes with private outdoor space', gradient: 'from-blue-900/90 via-blue-800/40' },
+  { title: 'Apartment', count: '800K+', image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80', href: '/search?type=APARTMENT', icon: Building2, desc: 'Urban living in multi-unit buildings', gradient: 'from-emerald-900/90 via-emerald-800/40' },
+  { title: 'Condo', count: '450K+', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80', href: '/search?type=CONDO', icon: Key, desc: 'Owned units with shared amenities', gradient: 'from-purple-900/90 via-purple-800/40' },
+  { title: 'Townhouse', count: '1.2M+', image: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800&q=80', href: '/search?type=TOWNHOUSE', icon: Building2, desc: 'Multi-level attached homes', gradient: 'from-amber-900/90 via-amber-800/40' },
 ]
 
 const features = [
@@ -323,13 +323,13 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }} 
             whileInView={{ opacity: 1, y: 0 }} 
             viewport={{ once: true }}
-            className="flex items-center justify-between mb-10"
+            className="flex items-end justify-between mb-10"
           >
             <div>
               <h2 className="text-3xl font-bold tracking-tight">Browse by Type</h2>
               <p className="text-muted-foreground mt-1">Explore different property types</p>
             </div>
-            <Link href="/search" className="hidden sm:flex items-center gap-1 text-sm font-medium text-primary hover:gap-2 transition-all">
+            <Link href="/search" className="flex items-center gap-1 text-sm font-medium text-primary hover:gap-2 transition-all flex-shrink-0">
               View All <ArrowRight className="w-4 h-4" />
             </Link>
           </motion.div>
@@ -341,18 +341,26 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="grid grid-cols-2 md:grid-cols-4 gap-4"
           >
-            {categories.map((cat, idx) => (
-              <motion.div key={idx} variants={item}>
-                <Link href={cat.href} className="group relative aspect-square rounded-2xl overflow-hidden">
-                  <Image src={cat.image} alt={cat.title} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="text-xl font-semibold text-white">{cat.title}</h3>
-                    <p className="text-white/70 text-sm">{cat.count} listings</p>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+            {categories.map((cat, idx) => {
+              const Icon = cat.icon
+              return (
+                <motion.div key={idx} variants={item}>
+                  <Link href={cat.href} className="group relative aspect-square rounded-2xl overflow-hidden block">
+                    <Image src={cat.image} alt={cat.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <div className={`absolute inset-0 bg-gradient-to-t ${cat.gradient} to-transparent`} />
+                    <div className="absolute top-3 left-3 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                      <Icon className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h3 className="text-xl font-semibold text-white">{cat.title}</h3>
+                      <p className="text-white/70 text-sm mt-0.5">{cat.desc}</p>
+                      <p className="text-white/50 text-xs mt-1.5">{cat.count} listings</p>
+                    </div>
+                    <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl group-hover:ring-white/30 transition-colors" />
+                  </Link>
+                </motion.div>
+              )
+            })}
           </motion.div>
         </div>
       </section>

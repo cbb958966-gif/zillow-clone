@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useTheme } from '@/context/ThemeContext'
@@ -35,9 +35,17 @@ interface MapViewProps {
   onPropertyClick?: (property: Property) => void
 }
 
+const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY
+const CARTO_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+
+function cartoTileUrl(style: 'voyager' | 'dark_all') {
+  const url = `https://basemaps.cartocdn.com/rastertiles/${style}/{z}/{x}/{y}{r}.png`
+  return CARTO_API_KEY ? `${url}?key=${encodeURIComponent(CARTO_API_KEY)}` : url
+}
+
 const TILES = {
-  light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-  dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  light: cartoTileUrl('voyager'),
+  dark: cartoTileUrl('dark_all'),
 }
 
 function formatPrice(price: number) {
@@ -100,7 +108,7 @@ export default function MapView({ properties, center = [40.7128, -74.006], zoom 
     const map = L.map(mapRef.current, { zoomControl: true, scrollWheelZoom: true }).setView(validCenter, zoom)
 
     tileLayerRef.current = L.tileLayer(theme === 'dark' ? TILES.dark : TILES.light, {
-      attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+      attribution: CARTO_ATTRIBUTION,
       maxZoom: 20,
     }).addTo(map)
 
@@ -118,7 +126,7 @@ export default function MapView({ properties, center = [40.7128, -74.006], zoom 
     if (!mapInstance.current || !mounted) return
     if (tileLayerRef.current) { tileLayerRef.current.remove() }
     tileLayerRef.current = L.tileLayer(theme === 'dark' ? TILES.dark : TILES.light, {
-      attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+      attribution: CARTO_ATTRIBUTION,
       maxZoom: 20,
     }).addTo(mapInstance.current)
   }, [theme, mounted])

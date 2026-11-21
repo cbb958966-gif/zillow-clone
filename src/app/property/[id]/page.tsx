@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import ImageLightbox from '@/components/ImageLightbox'
@@ -13,7 +12,7 @@ import SiteFooter from '@/components/SiteFooter'
 import { 
   Bed, Bath, Square, Calendar, Home, MapPin, Phone, Mail,
   ChevronRight, Car, Trees, Waves, Flame, Building2, Ruler, Layers,
-  Clock, DollarSign, School, Store, Hospital, Train, Images
+  Clock, DollarSign, School, Store, Hospital, Train, Images, Star, TrendingUp
 } from 'lucide-react'
 
 const MapView = dynamic(() => import('@/components/MapView'), { 
@@ -54,7 +53,8 @@ interface Property {
     phone?: string
     bio?: string
     experience?: number
-    photo?: string
+    broker?: string | null
+    reviews?: { rating: number }[]
   }
 }
 
@@ -112,6 +112,10 @@ export default function PropertyDetail() {
       const response = await fetch(`/api/properties/${params.id}`)
       if (response.ok) {
         const data = await response.json()
+        if (data.agent) {
+          const user = data.agent.user
+          data.agent.name = `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || data.agent.email || 'HomeVista Agent'
+        }
         setProperty(data)
       } else {
         router.push('/')
@@ -148,9 +152,25 @@ export default function PropertyDetail() {
     )
   }
 
-  const primaryImage = property.images?.find(img => img.isPrimary) || property.images?.[0]
   const pricePerSqft = property.sqft ? Math.round(property.price / property.sqft) : null
   const pricePerSqftFormatted = pricePerSqft ? `$${pricePerSqft}/sqft` : null
+  const estimatedValue = Math.round(property.price / 1000) * 1000
+  const valueLow = Math.round((property.price * 0.96) / 1000) * 1000
+  const valueHigh = Math.round((property.price * 1.04) / 1000) * 1000
+  const agentReviews = property.agent?.reviews || []
+  const agentRating = agentReviews.length ? (agentReviews.reduce((sum, review) => sum + review.rating, 0) / agentReviews.length).toFixed(1) : null
+  const monthlyRate = 0.065 / 12
+  const monthlyPrincipalInterest = (property.price * 0.8 * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -360))
+  const monthlyTax = (property.price * 0.01) / 12
+  const monthlyInsurance = (property.price * 0.0035) / 12
+  const estimatedPayment = Math.round(monthlyPrincipalInterest + monthlyTax + monthlyInsurance)
+  const highlights = [
+    property.beds ? `${property.beds} bedrooms` : null,
+    property.baths ? `${property.baths} bathrooms` : null,
+    property.sqft ? `${property.sqft.toLocaleString()} sq ft` : null,
+    property.yearBuilt ? `Built in ${property.yearBuilt}` : null,
+    `${property.propertyType.replace(/_/g, ' ')} home`,
+  ].filter(Boolean) as string[]
 
   return (
     <div className="min-h-screen bg-background">
@@ -324,7 +344,23 @@ export default function PropertyDetail() {
                   </div>
                 </div>
               </div>
-              
+
+              <div className="mt-6 grid gap-3 rounded-2xl border border-border/60 bg-secondary/60 p-4 sm:grid-cols-2">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-card text-primary shadow-sm ring-1 ring-border/60">
+                    <TrendingUp className="h-[18px] w-[18px]" />
+                  </span>
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">HomeVista estimate</div>
+                    <div className="display-title text-xl">${estimatedValue.toLocaleString()}</div>
+                  </div>
+                </div>
+                <div className="sm:text-right">
+                  <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Estimated range</div>
+                  <div className="mt-1 text-sm font-semibold text-foreground">${valueLow.toLocaleString()} – ${valueHigh.toLocaleString()}</div>
+                </div>
+              </div>
+
               {/* Price History Mini */}
               <div className="mt-6 pt-6 border-t border-border">
                 <div className="flex items-center justify-between mb-3">
@@ -374,6 +410,14 @@ export default function PropertyDetail() {
                     <div>
                       <h3 className="text-lg font-semibold text-foreground mb-3">About this home</h3>
                       <p className="text-muted-foreground leading-relaxed">{property.description}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-foreground mb-3">What&apos;s special</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {highlights.map((highlight) => (
+                          <span key={highlight} className="pill px-3 py-1.5 text-xs font-medium text-muted-foreground">{highlight}</span>
+                        ))}
+                      </div>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
                       <div className="text-center p-3 sm:p-4 bg-secondary rounded-lg">
@@ -548,7 +592,7 @@ export default function PropertyDetail() {
               <div className="text-center mb-6">
                 <div className="text-3xl font-bold text-primary mb-1">${property.price.toLocaleString()}</div>
                 <div className="text-sm text-muted-foreground">
-                  ${Math.round(property.price / 30).toLocaleString()}/mo est. payment
+                  ${estimatedPayment.toLocaleString()}/mo est. payment
                 </div>
               </div>
 
@@ -576,16 +620,21 @@ export default function PropertyDetail() {
               {property.agent && (
                 <div className="mt-6 pt-6 border-t border-border">
                   <div className="flex items-center gap-4">
-                    {property.agent.photo ? (
-                      <Image src={property.agent.photo} alt={property.agent.name} width={56} height={56} className="w-14 h-14 rounded-full object-cover" unoptimized />
-                    ) : (
-                      <div className="w-14 h-14 bg-secondary rounded-full flex items-center justify-center">
-                        <Home className="w-6 h-6 text-muted-foreground" />
+                    <div className="w-14 h-14 bg-secondary rounded-full flex items-center justify-center">
+                      <Home className="w-6 h-6 text-muted-foreground" />
+                    </div>
+                    <div className="min-w-0">
+                      <Link href={`/agent/${property.agent.id}`} className="font-semibold hover:text-primary">{property.agent.name}</Link>
+                      <div className="text-sm text-muted-foreground">{property.agent.broker || 'HomeVista Realty'}</div>
+                      <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                        {agentRating && (
+                          <span className="inline-flex items-center gap-1 font-medium text-foreground">
+                            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                            {agentRating} ({agentReviews.length})
+                          </span>
+                        )}
+                        <span>{property.agent.experience || 5} years exp.</span>
                       </div>
-                    )}
-                    <div>
-                      <div className="font-semibold">{property.agent.name}</div>
-                      <div className="text-sm text-muted-foreground">{property.agent.experience || 5} years exp.</div>
                     </div>
                   </div>
                 </div>
@@ -601,22 +650,25 @@ export default function PropertyDetail() {
             >
               <h3 className="text-lg font-semibold text-foreground mb-4">Estimate Your Payment</h3>
               <div className="space-y-4">
-                <div>
-                  <label className="block text-sm text-muted-foreground mb-1">Down Payment</label>
-                  <input type="text" value={`$${Math.round(property.price * 0.2).toLocaleString()} (20%)`} readOnly className="w-full px-3 py-2 border border-border rounded-lg bg-secondary text-sm" />
-                </div>
-                <div>
-                  <label className="block text-sm text-muted-foreground mb-1">Interest Rate</label>
-                  <input type="text" value="6.5%" readOnly className="w-full px-3 py-2 border border-border rounded-lg bg-secondary text-sm" />
-                </div>
-                <div>
-                  <label className="block text-sm text-muted-foreground mb-1">Loan Term</label>
-                  <input type="text" value="30 years" readOnly className="w-full px-3 py-2 border border-border rounded-lg bg-secondary text-sm" />
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Principal &amp; interest</span>
+                    <span className="font-medium">${Math.round(monthlyPrincipalInterest).toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Property taxes</span>
+                    <span className="font-medium">${Math.round(monthlyTax).toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Home insurance</span>
+                    <span className="font-medium">${Math.round(monthlyInsurance).toLocaleString()}</span>
+                  </div>
+                  <p className="pt-1 text-xs text-muted-foreground">20% down · 6.5% rate · 30-year fixed</p>
                 </div>
                 <div className="pt-4 border-t border-border">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Est. Monthly Payment</span>
-                    <span className="font-bold text-primary">${Math.round(property.price / 30).toLocaleString()}/mo</span>
+                    <span className="font-bold text-primary">${estimatedPayment.toLocaleString()}/mo</span>
                   </div>
                 </div>
                 <Link href="/mortgage" className="block text-center text-sm text-primary hover:underline">

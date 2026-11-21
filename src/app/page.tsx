@@ -36,6 +36,8 @@ interface Property {
   baths: number
   sqft: number
   status: string
+  propertyType?: string
+  createdAt?: string
   images: { url: string; isPrimary: boolean }[]
 }
 
@@ -45,6 +47,8 @@ const heroImages = [
   'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80',
   'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1920&q=80',
 ]
+
+const newListingCutoff = Date.now() - 14 * 24 * 60 * 60 * 1000
 
 const categories = [
   { title: 'Houses', count: '2.5M+', image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=900&q=80', href: '/search?type=SINGLE_FAMILY', icon: Home, description: 'Space to grow, room to breathe', span: 'lg:col-span-2' },
@@ -372,7 +376,13 @@ export default function HomePage() {
                           </div>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10" />
-                        {property.status === 'ACTIVE' && <span className="pill absolute left-3 top-3 border-white/30 bg-black/35 text-white backdrop-blur-md">For sale</span>}
+                        <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
+                          {property.status === 'ACTIVE' && <span className="pill border-white/30 bg-black/35 text-white backdrop-blur-md">For sale</span>}
+                          {property.propertyType && <span className="pill border-white/30 bg-black/35 text-white backdrop-blur-md">{property.propertyType.replace(/_/g, ' ')}</span>}
+                        </div>
+                        {property.createdAt && new Date(property.createdAt).getTime() >= newListingCutoff && (
+                          <span className="pill absolute bottom-4 right-3 border-transparent bg-primary text-primary-foreground">New</span>
+                        )}
                         <button
                           type="button"
                           onClick={(event) => void handleSave(event, property.id)}

@@ -504,7 +504,10 @@ function BuyContent() {
                       </div>
 
                       <div className="p-5 flex-1">
-                        <h3 className="font-semibold truncate group-hover:text-primary transition-colors">{property.title}</h3>
+                        <div className="flex items-start justify-between gap-3">
+                          <h3 className="font-semibold truncate group-hover:text-primary transition-colors">{property.title}</h3>
+                          <span className="pill shrink-0 px-2.5 py-1 text-[10px] uppercase tracking-wider">{property.propertyType.replace(/_/g, ' ')}</span>
+                        </div>
                         <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1 mb-3">
                           <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
                           <span className="truncate">{property.address}, {property.city}, {property.state}</span>

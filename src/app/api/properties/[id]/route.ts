@@ -51,6 +51,9 @@ export async function GET(
                 email: true,
                 phone: true
               }
+            },
+            reviews: {
+              select: { rating: true }
             }
           }
         }

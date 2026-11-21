@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext'
 import { motion } from 'framer-motion'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
-import { Search as SearchIcon, Bed, Bath, Square, Heart, Home, ChevronLeft, ChevronRight, Grid, List, MapPin, X } from 'lucide-react'
+import { Search as SearchIcon, Bed, Bath, Square, Heart, Home, ChevronLeft, ChevronRight, Grid, List, MapPin, X, Bookmark } from 'lucide-react'
 
 interface Property {
   id: string
@@ -23,11 +23,114 @@ interface Property {
   sqft: number
   propertyType: string
   status: string
+  createdAt?: string
   images: { url: string; isPrimary: boolean }[]
+  agent?: { broker?: string | null }
 }
 
 const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.05 } } }
 const item = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }
+
+const typeLabel = (type: string) => type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase())
+
+const sortOptions = {
+  newest: ['createdAt', 'desc'],
+  priceAsc: ['price', 'asc'],
+  priceDesc: ['price', 'desc'],
+  sqftDesc: ['sqft', 'desc'],
+} as const
+
+const newListingCutoff = Date.now() - 14 * 24 * 60 * 60 * 1000
+
+function SearchCard({ property, viewMode, isSaved, saving, onSave, formatPrice }: {
+  property: Property
+  viewMode: 'grid' | 'list'
+  isSaved: boolean
+  saving: boolean
+  onSave: (event: React.MouseEvent, id: string) => void
+  formatPrice: (price: number) => string
+}) {
+  const [imageIndex, setImageIndex] = useState(0)
+  const images = property.images || []
+  const hasMultiple = images.length > 1
+  const isNew = property.createdAt ? new Date(property.createdAt).getTime() >= newListingCutoff : false
+
+  const cycleImage = (event: React.MouseEvent, direction: number) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setImageIndex((current) => (current + direction + images.length) % images.length)
+  }
+
+  return (
+    <Link href={`/property/${property.id}`} className="group block">
+      <div className={`surface-card surface-card-hover overflow-hidden ${viewMode === 'list' ? 'flex flex-col md:flex-row' : ''}`}>
+        <div className={`relative overflow-hidden ${viewMode === 'list' ? 'md:w-80 h-56' : 'aspect-[4/3]'}`}>
+          {images[imageIndex] ? (
+            <Image src={images[imageIndex].url} alt={property.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+          ) : (
+            <div className="w-full h-full bg-muted flex items-center justify-center">
+              <Home className="w-12 h-12 text-muted-foreground" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10" />
+
+          <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+            <span className={`pill px-3 py-1 text-xs font-medium ${property.status === 'ACTIVE' ? 'border-transparent bg-emerald-700 text-white' : property.status === 'PENDING' ? 'border-transparent bg-amber-700 text-white' : 'border-border bg-secondary text-secondary-foreground'}`}>
+              {property.status === 'ACTIVE' ? 'For Sale' : property.status === 'PENDING' ? 'Pending' : property.status}
+            </span>
+            {isNew && <span className="pill border-transparent bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">New</span>}
+          </div>
+
+          <button type="button" onClick={(event) => onSave(event, property.id)} disabled={saving}
+            className="absolute top-3 right-3 grid h-8 w-8 place-items-center rounded-full bg-white/90 text-gray-700 transition-transform hover:scale-110">
+            {saving ? (
+              <div className="w-4 h-4 border-2 border-gray-400 border-t-gray-600 rounded-full animate-spin" />
+            ) : (
+              <Heart className={`w-4 h-4 ${isSaved ? 'fill-red-500 text-red-500' : ''}`} />
+            )}
+          </button>
+
+          {hasMultiple && (
+            <>
+              <button type="button" aria-label="Previous photo" onClick={(event) => cycleImage(event, -1)} className="absolute left-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-md transition-opacity hover:bg-black/60 group-hover:opacity-100">
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button type="button" aria-label="Next photo" onClick={(event) => cycleImage(event, 1)} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-md transition-opacity hover:bg-black/60 group-hover:opacity-100">
+                <ChevronRight className="w-4 h-4" />
+              </button>
+              <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1">
+                {images.slice(0, 5).map((_, index) => (
+                  <span key={index} className={`h-1.5 rounded-full transition-all ${index === imageIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/60'}`} />
+                ))}
+              </div>
+            </>
+          )}
+
+          <div className="absolute bottom-0 left-0 right-0 p-4">
+            <span className="display-title text-xl text-white">{formatPrice(property.price)}</span>
+          </div>
+        </div>
+
+        <div className="p-5 flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="font-semibold truncate group-hover:text-primary transition-colors">{property.title}</h3>
+            <span className="pill shrink-0 px-2.5 py-1 text-[10px] uppercase tracking-wider">{typeLabel(property.propertyType)}</span>
+          </div>
+          <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1 mb-3">
+            <MapPin className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">{property.address}, {property.city}, {property.state}</span>
+          </div>
+          {property.agent?.broker && <p className="text-xs font-medium text-muted-foreground mb-3">{property.agent.broker}</p>}
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            {property.beds > 0 && <span className="flex items-center gap-1"><Bed className="w-4 h-4" />{property.beds} bed</span>}
+            {property.baths > 0 && <span className="flex items-center gap-1"><Bath className="w-4 h-4" />{Math.floor(property.baths)} bath</span>}
+            {property.sqft > 0 && <span className="flex items-center gap-1"><Square className="w-4 h-4" />{property.sqft.toLocaleString()} sqft</span>}
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
 
 function SearchContent() {
   const searchParams = useSearchParams()
@@ -38,6 +141,7 @@ function SearchContent() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [savedProperties, setSavedProperties] = useState<Set<string>>(new Set())
   const [savingId, setSavingId] = useState<string | null>(null)
+  const [searchSaved, setSearchSaved] = useState(false)
   const [filters, setFilters] = useState({
     search: searchParams.get('q') || searchParams.get('search') || '',
     propertyType: searchParams.get('type') || '',
@@ -76,17 +180,28 @@ function SearchContent() {
   }, [filters])
 
   useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('homevista:savedSearches') || '[]') as string[]
+      setSearchSaved(saved.includes(searchParams.toString()))
+    } catch {
+      setSearchSaved(false)
+    }
+  }, [searchParams])
+
+  useEffect(() => {
     if (isInitialLoad) return
     const timer = setTimeout(() => {
       if (filters.search.length >= 3 || filters.search === '') {
         const params = new URLSearchParams()
         if (filters.search) params.set('q', filters.search)
         if (filters.propertyType) params.set('type', filters.propertyType)
+        const currentSort = searchParams.get('sort')
+        if (currentSort) params.set('sort', currentSort)
         router.push(`/search?${params.toString()}`)
       }
     }, 500)
     return () => clearTimeout(timer)
-  }, [filters.search, filters.propertyType, isInitialLoad])
+  }, [filters.search, filters.propertyType, isInitialLoad, searchParams])
 
   const fetchProperties = async (page: number = 1) => {
     setLoading(true)
@@ -96,6 +211,9 @@ function SearchContent() {
       const params = new URLSearchParams()
       if (searchFromUrl) params.set('search', searchFromUrl)
       if (typeFromUrl) params.set('propertyType', typeFromUrl.toUpperCase())
+      const [sortBy, sortOrder] = sortOptions[(searchParams.get('sort') || 'newest') as keyof typeof sortOptions] || sortOptions.newest
+      params.set('sortBy', sortBy)
+      params.set('sortOrder', sortOrder)
       params.set('page', page.toString())
       params.set('limit', '12')
       const res = await fetch(`/api/properties?${params.toString()}`)
@@ -116,8 +234,30 @@ function SearchContent() {
     const params = new URLSearchParams()
     if (filters.search) params.set('q', filters.search)
     if (filters.propertyType) params.set('type', filters.propertyType)
+    const currentSort = searchParams.get('sort')
+    if (currentSort) params.set('sort', currentSort)
     params.set('page', '1')
     router.push(`/search?${params.toString()}`)
+  }
+
+  const changeSort = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (value === 'newest') params.delete('sort')
+    else params.set('sort', value)
+    params.delete('page')
+    router.push(`/search?${params.toString()}`)
+  }
+
+  const saveCurrentSearch = () => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('homevista:savedSearches') || '[]') as string[]
+      const current = searchParams.toString()
+      if (!saved.includes(current)) saved.push(current)
+      localStorage.setItem('homevista:savedSearches', JSON.stringify(saved))
+      setSearchSaved(true)
+    } catch {
+      setSearchSaved(false)
+    }
   }
 
   const clearFilters = () => {
@@ -256,18 +396,28 @@ function SearchContent() {
       <div className="glass-control sticky top-16 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-sm font-medium text-foreground">{pagination.total.toLocaleString()} results</span>
               {(filters.search || filters.propertyType || activeFiltersCount > 0) && (
-                <>
-                  <span className="text-sm text-muted-foreground">{pagination.total.toLocaleString()} results</span>
-                  <button onClick={clearFilters} className="text-primary hover:text-primary/80 font-medium text-sm flex items-center gap-1">
-                    <X className="w-4 h-4" /> Clear
-                  </button>
-                </>
+                <button onClick={clearFilters} className="text-primary hover:text-primary/80 font-medium text-sm flex items-center gap-1">
+                  <X className="w-4 h-4" /> Clear
+                </button>
               )}
+              <button type="button" onClick={saveCurrentSearch} className={`pill gap-1.5 px-3 py-1.5 text-xs font-semibold ${searchSaved ? 'border-primary/30 bg-primary/10 text-primary' : ''}`}>
+                <Bookmark className={`w-3.5 h-3.5 ${searchSaved ? 'fill-current' : ''}`} />
+                {searchSaved ? 'Search saved' : 'Save search'}
+              </button>
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 bg-secondary rounded-lg p-1">
+              <label htmlFor="sort-results" className="hidden text-xs font-medium text-muted-foreground sm:inline">Sort</label>
+              <select id="sort-results" value={searchParams.get('sort') || 'newest'} onChange={(event) => changeSort(event.target.value)}
+                className="rounded-lg border border-border bg-background px-3 py-2 text-xs font-medium text-foreground outline-none focus:ring-2 focus:ring-primary/40">
+                <option value="newest">Newest</option>
+                <option value="priceAsc">Price: Low to High</option>
+                <option value="priceDesc">Price: High to Low</option>
+                <option value="sqftDesc">Largest</option>
+              </select>
+              <div className="flex items-center gap-2 rounded-lg bg-secondary p-1">
                 <button onClick={() => setViewMode('grid')} className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-background shadow-sm text-primary' : 'text-muted-foreground hover:text-foreground'}`}>
                   <Grid className="w-4 h-4" />
                 </button>
@@ -300,48 +450,14 @@ function SearchContent() {
               className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6' : 'space-y-4'}>
               {properties.map((property) => (
                 <motion.div key={property.id} variants={item}>
-                  <Link href={`/property/${property.id}`} className="group block">
-                    <div className={`bg-card border border-border rounded-2xl overflow-hidden hover:shadow-lg transition-all ${viewMode === 'list' ? 'flex flex-col md:flex-row' : ''}`}>
-                      <div className={`relative overflow-hidden ${viewMode === 'list' ? 'md:w-80 h-56' : 'aspect-[4/3]'}`}>
-                        {property.images?.[0] ? (
-                          <Image src={property.images[0].url} alt={property.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                        ) : (
-                          <div className="w-full h-full bg-muted flex items-center justify-center">
-                            <Home className="w-12 h-12 text-muted-foreground" />
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                        <span className={`pill absolute top-3 left-3 px-3 py-1 text-xs font-medium ${property.status === 'ACTIVE' ? 'border-transparent bg-emerald-700 text-white' : property.status === 'PENDING' ? 'border-transparent bg-amber-700 text-white' : 'border-border bg-secondary text-secondary-foreground'}`}>
-                          {property.status === 'ACTIVE' ? 'For Sale' : property.status === 'PENDING' ? 'Pending' : property.status}
-                        </span>
-                        <button type="button" onClick={(e) => handleSave(e, property.id)} disabled={savingId === property.id}
-                          className="absolute top-3 right-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
-                          {savingId === property.id ? (
-                            <div className="w-4 h-4 border-2 border-gray-400 border-t-gray-600 rounded-full animate-spin" />
-                          ) : savedProperties.has(property.id) ? (
-                            <Heart className="w-4 h-4 fill-red-500 text-red-500" />
-                          ) : (
-                            <Heart className="w-4 h-4 text-gray-600" />
-                          )}
-                        </button>
-                        <div className="absolute bottom-0 left-0 right-0 p-4">
-                          <span className="text-xl font-bold text-white">{formatPrice(property.price)}</span>
-                        </div>
-                      </div>
-                      <div className="p-5 flex-1">
-                        <h3 className="font-semibold truncate group-hover:text-primary transition-colors">{property.title}</h3>
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1 mb-3">
-                          <MapPin className="w-3.5 h-3.5" />
-                          <span className="truncate">{property.address}, {property.city}, {property.state}</span>
-                        </div>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          {property.beds > 0 && <span className="flex items-center gap-1"><Bed className="w-4 h-4" />{property.beds} bed</span>}
-                          {property.baths > 0 && <span className="flex items-center gap-1"><Bath className="w-4 h-4" />{Math.floor(property.baths)} bath</span>}
-                          {property.sqft > 0 && <span className="flex items-center gap-1"><Square className="w-4 h-4" />{property.sqft.toLocaleString()} sqft</span>}
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
+                  <SearchCard
+                    property={property}
+                    viewMode={viewMode}
+                    isSaved={savedProperties.has(property.id)}
+                    saving={savingId === property.id}
+                    onSave={handleSave}
+                    formatPrice={formatPrice}
+                  />
                 </motion.div>
               ))}
             </motion.div>

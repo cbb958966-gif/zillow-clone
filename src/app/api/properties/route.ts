@@ -106,8 +106,11 @@ export async function GET(request: NextRequest) {
         where,
         include: {
           images: {
-            where: { isPrimary: true },
-            take: 1
+            orderBy: [
+              { isPrimary: 'desc' },
+              { order: 'asc' }
+            ],
+            take: 5
           },
           agent: {
             include: {

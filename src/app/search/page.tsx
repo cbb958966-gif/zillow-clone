@@ -3,14 +3,12 @@
 import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useSearchParams, useRouter, usePathname } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
-import { motion, AnimatePresence } from 'framer-motion'
-import ThemeToggle from '@/components/ThemeToggle'
-import { Search as SearchIcon, Bed, Bath, Square, Heart, Home, ChevronLeft, ChevronRight, Grid, List, Map, MapPin, Menu, X } from 'lucide-react'
-import dynamic from 'next/dynamic'
-
-const MapView = dynamic(() => import('@/components/MapView'), { ssr: false, loading: () => <div className="h-full bg-muted animate-pulse rounded-lg" /> })
+import { motion } from 'framer-motion'
+import SiteHeader from '@/components/SiteHeader'
+import SiteFooter from '@/components/SiteFooter'
+import { Search as SearchIcon, Bed, Bath, Square, Heart, Home, ChevronLeft, ChevronRight, Grid, List, MapPin, X } from 'lucide-react'
 
 interface Property {
   id: string
@@ -34,12 +32,10 @@ const item = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }
 function SearchContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const pathname = usePathname()
-  const { user, token, logout } = useAuth()
+  const { user, token } = useAuth()
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [showMap, setShowMap] = useState(false)
   const [savedProperties, setSavedProperties] = useState<Set<string>>(new Set())
   const [savingId, setSavingId] = useState<string | null>(null)
   const [filters, setFilters] = useState({
@@ -63,7 +59,6 @@ function SearchContent() {
   })
 
   const [isInitialLoad, setIsInitialLoad] = useState(true)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const pageFromUrl = parseInt(searchParams.get('page') || '1')
@@ -136,8 +131,6 @@ function SearchContent() {
     router.push(`/search?${currentParams.toString()}`)
   }
 
-  const handleSignOut = () => { logout(); router.push('/') }
-
   const handleSave = async (e: React.MouseEvent, propertyId: string) => {
     e.preventDefault()
     e.stopPropagation()
@@ -159,98 +152,7 @@ function SearchContent() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                <Home className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold tracking-tight">HomeVista</span>
-            </Link>
-
-            <nav className="hidden md:flex items-center gap-1">
-              {[
-                { href: '/search', label: 'Browse' },
-                { href: '/buy', label: 'Buy' },
-                { href: '/rent', label: 'Rent' },
-                { href: '/sell', label: 'Sell' },
-                { href: '/mortgage', label: 'Mortgage' },
-              ].map((link) => (
-                <Link key={link.href} href={link.href} className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                  pathname === link.href ? 'bg-primary text-primary-foreground' : 'text-foreground/70 hover:text-foreground hover:bg-secondary/50'
-                }`}>
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            <div className="hidden md:flex items-center gap-3">
-              <ThemeToggle />
-              {user ? (
-                <div className="flex items-center gap-3">
-                  <Link href="/dashboard/saved" className="p-2 text-foreground/70 hover:text-foreground hover:bg-secondary rounded-lg transition-colors">
-                    <Heart className="w-5 h-5" />
-                  </Link>
-                  <Link href="/dashboard" className="flex items-center gap-2 hover:bg-secondary rounded-lg p-2 transition-colors">
-                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">{user.firstName?.[0] || 'U'}</span>
-                    </div>
-                    <span className="font-medium text-sm">{user.firstName}</span>
-                  </Link>
-                  <button onClick={handleSignOut} className="text-sm text-foreground/70 hover:text-foreground">Sign Out</button>
-                </div>
-              ) : (
-                <>
-                  <Link href="/auth/signin" className="px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-secondary rounded-lg transition-colors">Sign In</Link>
-                  <Link href="/auth/signup" className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">Get Started</Link>
-                </>
-              )}
-            </div>
-
-            <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-border bg-background"
-            >
-              <div className="px-4 py-4 space-y-2">
-                {['Browse', 'Buy', 'Rent', 'Sell', 'Mortgage'].map((link) => (
-                  <Link key={link} href={`/${link.toLowerCase() === 'browse' ? 'search' : link.toLowerCase()}`} className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">
-                    {link}
-                  </Link>
-                ))}
-                <hr className="my-2 border-border" />
-                {user ? (
-                  <>
-                    <Link href="/dashboard" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Dashboard</Link>
-                    <Link href="/dashboard/saved" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Saved</Link>
-                    <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Sign Out</button>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/auth/signin" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Sign In</Link>
-                    <Link href="/auth/signup" className="block px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg text-center">Get Started</Link>
-                  </>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.header>
+      <SiteHeader />
 
       {/* Hero */}
       <section className="relative min-h-[50vh] md:min-h-[70vh] flex items-center overflow-hidden pt-16">
@@ -275,7 +177,7 @@ function SearchContent() {
             <p className="text-sm sm:text-base md:text-lg text-white/80 mb-6 sm:mb-8 text-center">Discover your dream property from thousands of listings across the country.</p>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-              <div className="bg-background/60 backdrop-blur-xl border border-white/20 rounded-2xl p-3 sm:p-4 shadow-2xl">
+              <div className="surface-card surface-card-hover bg-background/60 backdrop-blur-xl border border-white/20 rounded-2xl p-3 sm:p-4 shadow-2xl">
                 <form onSubmit={handleSearch} className="flex flex-col lg:flex-row gap-2 sm:gap-3">
                   <div className="flex-1 relative">
                     <SearchIcon className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 sm:w-5 h-4 sm:h-5 text-muted-foreground" />
@@ -351,7 +253,7 @@ function SearchContent() {
       </section>
 
       {/* Results Bar */}
-      <div className="sticky top-16 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
+      <div className="glass-control sticky top-16 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
@@ -409,7 +311,7 @@ function SearchContent() {
                           </div>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                        <span className="absolute top-3 left-3 px-3 py-1 bg-emerald-500 text-white text-xs font-medium rounded-full">{property.status === 'ACTIVE' ? 'For Sale' : property.status}</span>
+                        <span className="pill absolute top-3 left-3 px-3 py-1 bg-emerald-500 text-white text-xs font-medium rounded-full">{property.status === 'ACTIVE' ? 'For Sale' : property.status}</span>
                         <button type="button" onClick={(e) => handleSave(e, property.id)} disabled={savingId === property.id}
                           className="absolute top-3 right-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
                           {savingId === property.id ? (
@@ -476,54 +378,7 @@ function SearchContent() {
         )}
       </div>
 
-      {/* Footer */}
-      <footer className="bg-secondary text-secondary-foreground py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            <div className="col-span-2 md:col-span-1">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
-                  <Home className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold">HomeVista</span>
-              </Link>
-              <p className="text-sm text-muted-foreground">Your trusted partner in finding the perfect home.</p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/search" className="hover:text-foreground">Browse</Link></li>
-                <li><Link href="/buy" className="hover:text-foreground">Buy</Link></li>
-                <li><Link href="/rent" className="hover:text-foreground">Rent</Link></li>
-                <li><Link href="/sell" className="hover:text-foreground">Sell</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/mortgage" className="hover:text-foreground">Mortgage Calculator</Link></li>
-                <li><Link href="/agent" className="hover:text-foreground">Find Agents</Link></li>
-                <li><Link href="/help" className="hover:text-foreground">Help Center</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/about" className="hover:text-foreground">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-foreground">Contact</Link></li>
-                <li><Link href="/privacy" className="hover:text-foreground">Privacy</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-muted-foreground">&copy; 2026 HomeVista. All rights reserved.</p>
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <Link href="/terms" className="hover:text-foreground">Terms</Link>
-              <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }

@@ -1,14 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
-import { 
-  Home, MapPin, Check, ChevronRight, 
-  Building, Calendar, Camera, Search, 
-  ArrowLeft, Loader2, Sparkles, Shield, Clock, TrendingUp
+import {
+  Home, MapPin, Check, ChevronRight,
+  Loader2, Sparkles, Shield, Clock, TrendingUp
 } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
+import SiteFooter from '@/components/SiteFooter'
 
 export default function ListYourHomePage() {
   const router = useRouter()
@@ -86,34 +86,18 @@ export default function ListYourHomePage() {
         <div className="absolute -bottom-40 left-1/2 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl animate-pulse delay-2000" />
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 bg-white/10 backdrop-blur-md border-b border-white/10">
-        <div className="container-main">
-          <div className="flex items-center justify-between h-20">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:scale-110 transition-transform">
-                <Home className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-white">HomeVista</span>
-            </Link>
-            <Link href="/sell" className="flex items-center text-white/70 hover:text-white transition-colors">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Sell
-            </Link>
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* Hero Section */}
-      <div className="relative z-10 container-main py-16">
+      <div className="relative z-10 container-main pb-16 pt-24">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 px-4 py-2 rounded-full mb-6">
+          <div className="pill inline-flex items-center gap-2 bg-cyan-500/20 border-cyan-500/30 text-cyan-300 px-4 py-2 mb-6">
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-medium">Free to list • No hidden fees</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
             Sell Your Home
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+            <span className="block gradient-text">
               In Minutes
             </span>
           </h1>
@@ -155,7 +139,7 @@ export default function ListYourHomePage() {
         {/* Main Card */}
         <div className="max-w-2xl mx-auto">
           {step === 1 ? (
-            <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-10 shadow-2xl">
+            <div className="surface-card surface-card-hover bg-white/10 backdrop-blur-xl border-white/20 p-8 md:p-10 shadow-2xl">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-white mb-2">What's your home address?</h2>
                 <p className="text-white/60">Enter your property address to get started</p>
@@ -177,7 +161,7 @@ export default function ListYourHomePage() {
                 <button
                   type="submit"
                   disabled={!address.trim() || loading}
-                  className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold py-5 px-8 rounded-2xl hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="btn-smooth w-full flex items-center justify-center gap-3 py-5 px-8 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <>
@@ -208,7 +192,7 @@ export default function ListYourHomePage() {
               </div>
             </div>
           ) : step === 2 && verifiedAddress ? (
-            <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-10 shadow-2xl">
+            <div className="surface-card surface-card-hover bg-white/10 backdrop-blur-xl border-white/20 p-8 md:p-10 shadow-2xl">
               <div className="text-center mb-8">
                 <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <MapPin className="w-8 h-8 text-green-400" />
@@ -217,7 +201,7 @@ export default function ListYourHomePage() {
                 <p className="text-white/60">Please confirm to continue</p>
               </div>
 
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8">
+              <div className="surface-card bg-white/5 border-white/10 p-6 mb-8">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
                     <Home className="w-6 h-6 text-white" />
@@ -233,7 +217,7 @@ export default function ListYourHomePage() {
                 <button
                   onClick={handleConfirmAddress}
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold py-5 px-8 rounded-2xl hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 shadow-lg shadow-cyan-500/30 disabled:opacity-50"
+                  className="btn-smooth w-full flex items-center justify-center gap-3 py-5 px-8 disabled:opacity-50"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -278,14 +262,7 @@ export default function ListYourHomePage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="relative z-10 mt-16 border-t border-white/10">
-        <div className="container-main py-8">
-          <div className="text-center text-white/40 text-sm">
-            <p>© 2026 HomeVista. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }

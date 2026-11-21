@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import { Home } from 'lucide-react';
+import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 
 interface Agent {
   id: string;
@@ -133,21 +133,29 @@ export default function AgentProfile() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-gray-50">
+        <SiteHeader />
+        <div className="flex min-h-[60vh] items-center justify-center pt-24">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+        <SiteFooter />
       </div>
     );
   }
 
   if (!agent) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Agent Not Found</h2>
-          <a href="/" className="text-blue-600 hover:text-blue-800">
-            Back to Home
-          </a>
+      <div className="min-h-screen bg-gray-50">
+        <SiteHeader />
+        <div className="flex min-h-[60vh] items-center justify-center pt-24">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Agent Not Found</h2>
+            <a href="/" className="text-blue-600 hover:text-blue-800">
+              Back to Home
+            </a>
+          </div>
         </div>
+        <SiteFooter />
       </div>
     );
   }
@@ -158,43 +166,10 @@ export default function AgentProfile() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
-        <div className="container-main">
-          <div className="flex items-center justify-between h-20">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:scale-110 transition-transform">
-                <Home className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-gray-900 dark:text-white">HomeVista</span>
-            </Link>
+      <SiteHeader />
 
-            <nav className="hidden lg:flex items-center gap-2">
-              {[
-                { href: '/buy', label: 'Buy' },
-                { href: '/rent', label: 'Rent' },
-                { href: '/sell', label: 'Sell' },
-                { href: '/search', label: 'Browse' },
-                { href: '/mortgage', label: 'Mortgage' },
-              ].map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="px-4 py-2 rounded-xl font-medium text-gray-700 dark:text-gray-200 hover:text-cyan-600 dark:hover:text-cyan-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            <Link href="/" className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
-              <span className="text-gray-700 font-medium">← Back</span>
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow-md p-8 mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">
+        <div className="surface-card p-8 mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
             <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
               <span className="text-3xl font-bold text-gray-600">
@@ -242,13 +217,13 @@ export default function AgentProfile() {
               <div className="mt-4 space-y-2">
                 <a
                   href={`tel:${agent.phone || agent.user.phone}`}
-                  className="block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-center"
+                  className="btn-smooth block px-4 py-2 text-center"
                 >
                   Call Agent
                 </a>
                 <a
                   href={`mailto:${agent.email || agent.user.email}`}
-                  className="block px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 text-center"
+                  className="btn-quiet block px-4 py-2 text-center"
                 >
                   Email Agent
                 </a>
@@ -270,7 +245,7 @@ export default function AgentProfile() {
                 {agent.specialties.split(',').map((specialty, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                    className="pill"
                   >
                     {specialty.trim()}
                   </span>
@@ -301,7 +276,7 @@ export default function AgentProfile() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md">
+        <div className="surface-card">
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-8 px-6">
               <button
@@ -341,7 +316,7 @@ export default function AgentProfile() {
                         <a
                           key={property.id}
                           href={`/property/${property.id}`}
-                          className="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                          className="block surface-card surface-card-hover overflow-hidden"
                         >
                           <div className="relative h-48 bg-gray-200">
                             {primaryImage ? (
@@ -355,7 +330,7 @@ export default function AgentProfile() {
                                 <div className="text-gray-400 text-4xl">🏠</div>
                               </div>
                             )}
-                            <div className="absolute bottom-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-sm font-semibold">
+                            <div className="pill absolute bottom-2 left-2 bg-primary text-primary-foreground">
                               ${property.price.toLocaleString()}
                             </div>
                           </div>
@@ -380,7 +355,7 @@ export default function AgentProfile() {
 
             {activeTab === 'reviews' && (
               <div>
-                <div className="mb-8 p-6 bg-gray-50 rounded-lg">
+                <div className="surface-card mb-8 p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Leave a Review</h3>
                   <form onSubmit={handleSubmitReview} className="space-y-4">
                     <div>
@@ -406,7 +381,7 @@ export default function AgentProfile() {
                     <button
                       type="submit"
                       disabled={submittingReview}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                      className="btn-smooth px-4 py-2 disabled:opacity-50"
                     >
                       {submittingReview ? 'Submitting...' : 'Submit Review'}
                     </button>
@@ -442,6 +417,7 @@ export default function AgentProfile() {
           </div>
         </div>
       </div>
+      <SiteFooter />
     </div>
   );
 }

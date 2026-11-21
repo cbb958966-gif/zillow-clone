@@ -1,30 +1,38 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { useAuth } from '@/context/AuthContext'
-import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Search, Heart, Home, MapPin, Bed, Bath, Square, 
-  ArrowRight, Star, Menu, X, Building2, Key, TrendingUp,
-  Shield, Users, ChevronRight, Play
+import { motion } from 'framer-motion'
+import {
+  ArrowRight,
+  Bath,
+  Bed,
+  Building2,
+  Heart,
+  Home,
+  Key,
+  Loader2,
+  MapPin,
+  Search,
+  Shield,
+  Square,
+  Star,
+  TrendingUp,
+  Users,
 } from 'lucide-react'
-import ThemeToggle from '@/components/ThemeToggle'
+import SiteHeader from '@/components/SiteHeader'
+import SiteFooter from '@/components/SiteFooter'
 
 interface Property {
   id: string
   title: string
-  address: string
   city: string
   state: string
-  zipCode: string
   price: number
   beds: number
   baths: number
   sqft: number
-  propertyType: string
   status: string
   images: { url: string; isPrimary: boolean }[]
 }
@@ -33,579 +41,452 @@ const heroImages = [
   'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80',
   'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80',
   'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80',
-  'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1920&q=80'
+  'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1920&q=80',
 ]
 
 const categories = [
-  { title: 'House', count: '2.5M+', image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80', href: '/search?type=SINGLE_FAMILY', icon: Home, desc: 'Single-family homes with private outdoor space', gradient: 'from-blue-900/90 via-blue-800/40' },
-  { title: 'Apartment', count: '800K+', image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80', href: '/search?type=APARTMENT', icon: Building2, desc: 'Urban living in multi-unit buildings', gradient: 'from-emerald-900/90 via-emerald-800/40' },
-  { title: 'Condo', count: '450K+', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80', href: '/search?type=CONDO', icon: Key, desc: 'Owned units with shared amenities', gradient: 'from-purple-900/90 via-purple-800/40' },
-  { title: 'Townhouse', count: '1.2M+', image: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800&q=80', href: '/search?type=TOWNHOUSE', icon: Building2, desc: 'Multi-level attached homes', gradient: 'from-amber-900/90 via-amber-800/40' },
+  { title: 'Houses', count: '2.5M+', image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=900&q=80', href: '/search?type=SINGLE_FAMILY', icon: Home, description: 'Space to grow, room to breathe', span: 'lg:col-span-2' },
+  { title: 'Apartments', count: '800K+', image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80', href: '/search?type=APARTMENT', icon: Building2, description: 'City living, simplified', span: '' },
+  { title: 'Condos', count: '450K+', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80', href: '/search?type=CONDO', icon: Key, description: 'Low maintenance, high reward', span: '' },
+  { title: 'Townhomes', count: '1.2M+', image: 'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=800&q=80', href: '/search?type=TOWNHOUSE', icon: Building2, description: 'Attached living, own entrance', span: '' },
 ]
 
 const features = [
-  { icon: Search, title: 'Smart Search', description: 'AI-powered search that learns your preferences', color: 'bg-blue-500' },
-  { icon: Shield, title: 'Verified Listings', description: 'Every property verified for accuracy', color: 'bg-green-500' },
-  { icon: TrendingUp, title: 'Market Insights', description: 'Real-time data and price trends', color: 'bg-purple-500' },
-  { icon: Users, title: 'Expert Agents', description: 'Top-rated local agents at your service', color: 'bg-orange-500' },
+  { icon: Search, title: 'Search that understands', description: 'Natural language filters that learn what matters to you.', tint: 'from-[#0071e3]/18 to-[#38bdf8]/4', iconClass: 'text-[#0071e3]' },
+  { icon: Shield, title: 'Verified by default', description: 'Every listing is checked for accuracy before it reaches you.', tint: 'from-emerald-500/18 to-emerald-500/4', iconClass: 'text-emerald-600' },
+  { icon: TrendingUp, title: 'Clarity on price', description: 'Live market context so you can move with confidence.', tint: 'from-violet-500/18 to-violet-500/4', iconClass: 'text-violet-600' },
+  { icon: Users, title: 'People, not portals', description: 'Local agents who know the streets, schools, and stories.', tint: 'from-amber-500/18 to-amber-500/4', iconClass: 'text-amber-600' },
 ]
 
 const stats = [
-  { value: '2.5M+', label: 'Active Listings' },
-  { value: '50K+', label: 'Expert Agents' },
-  { value: '10M+', label: 'Happy Clients' },
-  { value: '100+', label: 'Cities Covered' },
+  { value: '2.5M+', label: 'Active listings', icon: Home },
+  { value: '50K+', label: 'Local agents', icon: Users },
+  { value: '10M+', label: 'Families helped', icon: Heart },
+  { value: '100+', label: 'Cities covered', icon: MapPin },
 ]
 
 const testimonials = [
-  { name: 'Sarah Johnson', role: 'First-time Buyer', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80', text: 'Found my dream home within weeks! The search filters made it so easy.', rating: 5 },
-  { name: 'Michael Chen', role: 'Property Investor', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80', text: 'The market insights have been invaluable for my investment portfolio.', rating: 5 },
-  { name: 'Emily Davis', role: 'Relocating Professional', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80', text: 'Moving cross-country was smooth thanks to virtual tours.', rating: 5 },
+  { name: 'Sarah Johnson', role: 'First-time buyer', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80', text: 'Found my dream home within weeks. The search felt effortless from the very first click.' },
+  { name: 'Michael Chen', role: 'Property investor', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80', text: 'The market insights have been invaluable for building my portfolio with confidence.' },
+  { name: 'Emily Davis', role: 'Relocating professional', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80', text: 'Moving across the country was surprisingly calm thanks to virtual tours and local guides.' },
 ]
 
-const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } }
-const item = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }
+const reveal = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
+}
+
+const stagger = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.08 } },
+}
 
 export default function HomePage() {
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [currentHero, setCurrentHero] = useState(0)
   const [savedProperties, setSavedProperties] = useState<Set<string>>(new Set())
   const [savingId, setSavingId] = useState<string | null>(null)
-  const { user, token, logout } = useAuth()
-  const router = useRouter()
 
-  useEffect(() => { fetchProperties() }, [])
   useEffect(() => {
-    const interval = setInterval(() => setCurrentHero((prev) => (prev + 1) % heroImages.length), 6000)
+    const interval = setInterval(() => setCurrentHero((previous) => (previous + 1) % heroImages.length), 7000)
     return () => clearInterval(interval)
   }, [])
 
-  const handleSignOut = () => { logout(); router.push('/') }
+  useEffect(() => {
+    let active = true
+    const load = async () => {
+      try {
+        const response = await fetch('/api/properties?limit=8')
+        const data = await response.json()
+        if (active && data.properties) setProperties(data.properties)
+      } catch (error) {
+        console.error('Error fetching properties:', error)
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+    void load()
+    return () => { active = false }
+  }, [])
 
-  const fetchProperties = async () => {
-    try {
-      const res = await fetch('/api/properties?limit=8')
-      const data = await res.json()
-      if (data.properties) setProperties(data.properties)
-    } catch (error) { console.error('Error fetching properties:', error) }
-    finally { setLoading(false) }
-  }
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSearch = (event: React.FormEvent) => {
+    event.preventDefault()
     window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`
   }
 
-  const handleSave = async (e: React.MouseEvent, propertyId: string) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if (!token || !user) { alert('Please sign in to save properties'); return }
+  const handleSave = async (event: React.MouseEvent, propertyId: string) => {
+    event.preventDefault()
+    event.stopPropagation()
+    const token = localStorage.getItem('token')
+    if (!token) {
+      window.location.href = '/auth/signin'
+      return
+    }
     setSavingId(propertyId)
     try {
-      if (savedProperties.has(propertyId)) {
-        const response = await fetch(`/api/user/saved-properties?propertyId=${propertyId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } })
-        if (response.ok) { setSavedProperties(prev => { const newSet = new Set(prev); newSet.delete(propertyId); return newSet }) }
-      } else {
-        const response = await fetch('/api/user/saved-properties', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ propertyId }) })
-        if (response.ok) { setSavedProperties(prev => new Set(prev).add(propertyId)) }
+      const isSaved = savedProperties.has(propertyId)
+      const response = await fetch(
+        isSaved ? `/api/user/saved-properties?propertyId=${propertyId}` : '/api/user/saved-properties',
+        {
+          method: isSaved ? 'DELETE' : 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: isSaved ? undefined : JSON.stringify({ propertyId }),
+        },
+      )
+      if (response.ok) {
+        setSavedProperties((previous) => {
+          const next = new Set(previous)
+          if (isSaved) next.delete(propertyId)
+          else next.add(propertyId)
+          return next
+        })
       }
-    } catch (error) { console.error('Error saving property:', error) }
-    finally { setSavingId(null) }
+    } catch (error) {
+      console.error('Error saving property:', error)
+    } finally {
+      setSavingId(null)
+    }
   }
 
-  const formatPrice = (price: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price)
+  const formatPrice = (price: number) =>
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price)
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <motion.header 
-        initial={{ y: -100 }} 
-        animate={{ y: 0 }} 
-        className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                <Home className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold tracking-tight">HomeVista</span>
-            </Link>
+    <div className="min-h-screen overflow-hidden bg-background">
+      <SiteHeader />
 
-            <nav className="hidden md:flex items-center gap-1">
-              {[
-                { href: '/search', label: 'Browse' },
-                { href: '/buy', label: 'Buy' },
-                { href: '/rent', label: 'Rent' },
-                { href: '/sell', label: 'Sell' },
-                { href: '/mortgage', label: 'Mortgage' },
-              ].map((link) => (
-                <Link key={link.href} href={link.href} className="px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-secondary/50 rounded-lg transition-colors">
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            <div className="hidden md:flex items-center gap-3">
-              <ThemeToggle />
-              {user ? (
-                <div className="flex items-center gap-3">
-                  <Link href="/dashboard/saved" className="p-2 text-foreground/70 hover:text-foreground hover:bg-secondary rounded-lg transition-colors">
-                    <Heart className="w-5 h-5" />
-                  </Link>
-                  <Link href="/dashboard" className="flex items-center gap-2 hover:bg-secondary rounded-lg p-2 transition-colors">
-                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">{user.firstName?.[0] || 'U'}</span>
-                    </div>
-                    <span className="font-medium text-sm">{user.firstName}</span>
-                  </Link>
-                  <button onClick={handleSignOut} className="text-sm text-foreground/70 hover:text-foreground">Sign Out</button>
-                </div>
-              ) : (
-                <>
-                  <Link href="/auth/signin" className="px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-secondary rounded-lg transition-colors">Sign In</Link>
-                  <Link href="/auth/signup" className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">Get Started</Link>
-                </>
-              )}
-            </div>
-
-            <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+      <main>
+        <section className="relative flex min-h-[86vh] items-center overflow-hidden pt-16">
+          <div className="absolute inset-0">
+            {heroImages.map((image, index) => (
+              <motion.div
+                key={image}
+                initial={{ opacity: 0, scale: 1.04 }}
+                animate={{ opacity: index === currentHero ? 1 : 0, scale: index === currentHero ? 1 : 1.04 }}
+                transition={{ duration: 1.4, ease: 'easeOut' }}
+                className="absolute inset-0"
+              >
+                <Image src={image} alt="Featured home" fill className="object-cover" priority={index === 0} />
+              </motion.div>
+            ))}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#05070c]/85 via-[#05070c]/55 to-[#05070c]/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-[#05070c]/40" />
           </div>
-        </div>
 
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div 
-              initial={{ opacity: 0, height: 0 }} 
-              animate={{ opacity: 1, height: 'auto' }} 
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-border bg-background"
-            >
-              <div className="px-4 py-4 space-y-2">
-                {['Browse', 'Buy', 'Rent', 'Sell', 'Mortgage'].map((link) => (
-                  <Link key={link} href={`/${link.toLowerCase() === 'browse' ? 'search' : link.toLowerCase()}`} className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">
-                    {link}
+          <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-14 sm:px-6 lg:px-8">
+            <motion.div initial="hidden" animate="show" variants={stagger} className="max-w-3xl">
+              <motion.div variants={reveal} className="glass-control inline-flex items-center gap-2 rounded-full px-4 py-2 text-white">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                </span>
+                <span className="text-xs font-medium tracking-wide">New homes added every day</span>
+              </motion.div>
+
+              <motion.h1 variants={reveal} className="display-title mt-7 text-[clamp(2.8rem,7vw,5.6rem)] text-white">
+                Where you live
+                <span className="block gradient-text">starts here.</span>
+              </motion.h1>
+
+              <motion.p variants={reveal} className="mt-5 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg">
+                A considered collection of homes, thoughtful tools, and the local expertise to help you find the one.
+              </motion.p>
+
+              <motion.form
+                variants={reveal}
+                onSubmit={handleSearch}
+                className="glass-control mt-9 flex w-full max-w-2xl flex-col gap-2 rounded-[26px] p-2 sm:flex-row sm:items-center"
+              >
+                <div className="relative flex-1">
+                  <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder="City, neighborhood, or ZIP"
+                    className="h-14 w-full rounded-2xl bg-background/90 pl-12 pr-4 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/40"
+                    aria-label="Search location"
+                  />
+                </div>
+                <button type="submit" className="btn-smooth h-14 rounded-2xl px-7 text-sm">
+                  Search homes <ArrowRight className="h-4 w-4" />
+                </button>
+              </motion.form>
+
+              <motion.div variants={reveal} className="mt-5 flex flex-wrap items-center gap-2">
+                <span className="mr-1 text-xs font-medium text-white/55">Popular</span>
+                {['Houses', 'Apartments', 'Condos', 'Townhomes'].map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/search?type=${tag.toUpperCase().slice(0, -1)}`}
+                    className="glass-control rounded-full px-4 py-2 text-xs font-medium text-white/85 transition-all duration-300 hover:-translate-y-0.5 hover:text-white"
+                  >
+                    {tag}
                   </Link>
                 ))}
-                <hr className="my-2 border-border" />
-                {user ? (
-                  <>
-                    <Link href="/dashboard" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Dashboard</Link>
-                    <Link href="/dashboard/saved" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Saved</Link>
-                    <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Sign Out</button>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/auth/signin" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Sign In</Link>
-                    <Link href="/auth/signup" className="block px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg text-center">Get Started</Link>
-                  </>
-                )}
-              </div>
+              </motion.div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.header>
+          </div>
 
-      {/* Hero Section */}
-      <section className="relative min-h-[70vh] md:min-h-[90vh] flex items-center overflow-hidden pt-16">
-        <div className="absolute inset-0">
-          {heroImages.map((img, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: idx === currentHero ? 1 : 0 }}
-              transition={{ duration: 1 }}
-              className="absolute inset-0"
-            >
-              <Image src={img} alt="Luxury home" fill className="object-cover" priority={idx === 0} />
-            </motion.div>
-          ))}
-          <div className="absolute inset-0 bg-black/50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-black/20 to-transparent" />
-        </div>
+          <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+            {heroImages.map((image, index) => (
+              <button
+                key={image}
+                type="button"
+                onClick={() => setCurrentHero(index)}
+                aria-label={`Show featured home ${index + 1}`}
+                className={`h-1.5 rounded-full transition-all duration-500 ${index === currentHero ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/70'}`}
+              />
+            ))}
+          </div>
+        </section>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl"
+        <section className="relative z-20 mx-auto -mt-14 max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="glass-control grid grid-cols-2 gap-y-7 overflow-hidden rounded-[28px] px-6 py-7 md:grid-cols-4 md:divide-x md:divide-border/70"
           >
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }} 
-              animate={{ opacity: 1, scale: 1 }} 
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full mb-6"
-            >
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-white/90 text-sm font-medium">{properties.length > 0 ? `${properties.length * 1000}+` : '50,000+'} Active Listings</span>
-            </motion.div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight">
-              Find Your
-              <span className="block text-primary-foreground bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                Dream Home
-              </span>
-            </h1>
-            
-            <p className="text-sm sm:text-base md:text-lg text-white/80 mb-6 sm:mb-8 max-w-xl">
-              Discover thousands of properties across the country. Your perfect home is just a search away.
-            </p>
-
-            <motion.form 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.4 }}
-              onSubmit={handleSearch}
-              className="flex flex-col sm:flex-row gap-2 sm:gap-3 max-w-2xl mb-6"
-            >
-              <div className="relative flex-1">
-                <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 sm:w-5 h-4 sm:h-5 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Enter city, neighborhood, ZIP..."
-                  className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-4 bg-background border border-border rounded-xl text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-              <button type="submit" className="px-6 sm:px-8 py-3 sm:py-4 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base">
-                <Search className="w-4 sm:w-5 h-4 sm:h-5" />
-                Search
-              </button>
-            </motion.form>
-
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              transition={{ delay: 0.6 }}
-              className="flex flex-wrap gap-2 sm:gap-3"
-            >
-              {['Houses', 'Apartments', 'Condos', 'Townhomes'].map((tag) => (
-                <Link key={tag} href={`/search?type=${tag.toUpperCase().slice(0, -1)}`} className="px-3 sm:px-4 py-1.5 sm:py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white text-xs sm:text-sm hover:bg-white/20 transition-colors">
-                  {tag}
-                </Link>
-              ))}
-            </motion.div>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ delay: 0.8 }}
-            className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3 sm:gap-6 mt-8 sm:mt-12"
-          >
-            {stats.map((stat, idx) => (
-              <div key={idx} className="flex items-center gap-2 sm:gap-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-3 sm:px-5 py-2 sm:py-3">
-                <div className="text-lg sm:text-2xl font-bold text-white">{stat.value}</div>
-                <div className="text-xs sm:text-sm text-white/70">{stat.label}</div>
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex items-center gap-4 px-2 md:justify-center">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
+                  <stat.icon className="h-5 w-5" />
+                </span>
+                <span>
+                  <span className="block display-title text-2xl">{stat.value}</span>
+                  <span className="block text-xs text-muted-foreground">{stat.label}</span>
+                </span>
               </div>
             ))}
           </motion.div>
-        </div>
+        </section>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-          {heroImages.map((_, idx) => (
-            <button key={idx} onClick={() => setCurrentHero(idx)} className={`h-1.5 rounded-full transition-all ${idx === currentHero ? 'w-8 bg-white' : 'w-2 bg-white/40'}`} />
-          ))}
-        </div>
-      </section>
+        <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger}>
+            <motion.div variants={reveal} className="mb-10 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <span className="eyebrow">Explore</span>
+                <h2 className="display-title mt-3 text-3xl sm:text-4xl">Browse by home type</h2>
+                <p className="mt-2 text-sm text-muted-foreground">Every kind of space, thoughtfully organized.</p>
+              </div>
+              <Link href="/search" className="btn-quiet text-sm">
+                View all homes <ArrowRight className="h-4 w-4" />
+              </Link>
+            </motion.div>
 
-      {/* Categories */}
-      <section className="py-20 bg-secondary/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }}
-            className="flex items-end justify-between mb-10"
-          >
-            <div>
-              <h2 className="text-3xl font-bold tracking-tight">Browse by Type</h2>
-              <p className="text-muted-foreground mt-1">Explore different property types</p>
-            </div>
-            <Link href="/search" className="flex items-center gap-1 text-sm font-medium text-primary hover:gap-2 transition-all flex-shrink-0">
-              View All <ArrowRight className="w-4 h-4" />
-            </Link>
+            <motion.div variants={stagger} className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+              {categories.map((category) => {
+                const Icon = category.icon
+                return (
+                  <motion.div key={category.title} variants={reveal} className={`tilt-scene ${category.span}`}>
+                    <Link
+                      href={category.href}
+                      className="tilt-card surface-card surface-card-hover group relative block h-full min-h-[230px] overflow-hidden rounded-[24px]"
+                    >
+                      <Image
+                        src={category.image}
+                        alt={category.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#060810]/90 via-[#060810]/25 to-transparent" />
+                      <div className="absolute left-4 top-4 grid h-10 w-10 place-items-center rounded-2xl border border-white/25 bg-white/15 text-white backdrop-blur-md">
+                        <Icon className="h-[18px] w-[18px]" />
+                      </div>
+                      <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+                        <h3 className="display-title text-xl">{category.title}</h3>
+                        <p className="mt-1 text-xs text-white/70">{category.description}</p>
+                        <p className="mt-3 text-xs font-medium text-white/90">{category.count} listings</p>
+                      </div>
+                    </Link>
+                  </motion.div>
+                )
+              })}
+            </motion.div>
           </motion.div>
+        </section>
 
-          <motion.div 
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4"
-          >
-            {categories.map((cat, idx) => {
-              const Icon = cat.icon
-              return (
-                <motion.div key={idx} variants={item}>
-                  <Link href={cat.href} className="group relative aspect-square rounded-2xl overflow-hidden block">
-                    <Image src={cat.image} alt={cat.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
-                    <div className={`absolute inset-0 bg-gradient-to-t ${cat.gradient} to-transparent`} />
-                    <div className="absolute top-3 left-3 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                      <Icon className="w-4 h-4 text-white" />
+        <section className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger}>
+            <motion.div variants={reveal} className="mb-10 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <span className="eyebrow">Just listed</span>
+                <h2 className="display-title mt-3 text-3xl sm:text-4xl">Fresh on the market</h2>
+                <p className="mt-2 text-sm text-muted-foreground">Homes worth a closer look, updated daily.</p>
+              </div>
+              <Link href="/buy" className="btn-quiet text-sm">
+                See all listings <ArrowRight className="h-4 w-4" />
+              </Link>
+            </motion.div>
+
+            {loading ? (
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                {[...Array(8)].map((_, index) => (
+                  <div key={index} className="surface-card overflow-hidden">
+                    <div className="aspect-[4/3] animate-pulse bg-muted" />
+                    <div className="space-y-3 p-5">
+                      <div className="h-5 w-3/4 animate-pulse rounded-lg bg-muted" />
+                      <div className="h-4 w-1/2 animate-pulse rounded-lg bg-muted" />
                     </div>
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <h3 className="text-xl font-semibold text-white">{cat.title}</h3>
-                      <p className="text-white/70 text-sm mt-0.5">{cat.desc}</p>
-                      <p className="text-white/50 text-xs mt-1.5">{cat.count} listings</p>
-                    </div>
-                    <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl group-hover:ring-white/30 transition-colors" />
-                  </Link>
-                </motion.div>
-              )
-            })}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Featured Properties */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }}
-            className="flex items-center justify-between mb-10"
-          >
-            <div>
-              <h2 className="text-3xl font-bold tracking-tight">Latest Properties</h2>
-              <p className="text-muted-foreground mt-1">Hand-picked properties just for you</p>
-            </div>
-            <Link href="/search" className="hidden sm:flex items-center gap-1 text-sm font-medium text-primary hover:gap-2 transition-all">
-              View All <ArrowRight className="w-4 h-4" />
-            </Link>
-          </motion.div>
-
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="rounded-2xl overflow-hidden bg-card">
-                  <div className="aspect-[4/3] bg-muted animate-pulse" />
-                  <div className="p-4 space-y-3">
-                    <div className="h-5 bg-muted rounded animate-pulse w-3/4" />
-                    <div className="h-4 bg-muted rounded animate-pulse w-1/2" />
                   </div>
-                </div>
-              ))}
-            </div>
-          ) : properties.length > 0 ? (
-            <motion.div 
-              variants={container}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-            >
-              {properties.map((property, idx) => (
-                <motion.div key={property.id} variants={item}>
-                  <Link href={`/property/${property.id}`} className="group block rounded-2xl overflow-hidden border border-border hover:shadow-lg transition-all">
-                    <div className="relative aspect-[4/3]">
-                      {property.images?.[0] ? (
-                        <Image src={property.images[0].url} alt={property.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                      ) : (
-                        <div className="w-full h-full bg-muted flex items-center justify-center">
-                          <Home className="w-10 h-10 text-muted-foreground" />
+                ))}
+              </div>
+            ) : properties.length > 0 ? (
+              <motion.div variants={stagger} className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                {properties.map((property) => (
+                  <motion.div key={property.id} variants={reveal} className="tilt-scene">
+                    <Link href={`/property/${property.id}`} className="tilt-card surface-card surface-card-hover group block overflow-hidden rounded-[24px]">
+                      <div className="relative aspect-[4/3] overflow-hidden">
+                        {property.images?.[0] ? (
+                          <Image
+                            src={property.images[0].url}
+                            alt={property.title}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="grid h-full w-full place-items-center bg-muted">
+                            <Home className="h-10 w-10 text-muted-foreground" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/10" />
+                        {property.status === 'ACTIVE' && <span className="pill absolute left-3 top-3 border-white/30 bg-black/35 text-white backdrop-blur-md">For sale</span>}
+                        <button
+                          type="button"
+                          onClick={(event) => void handleSave(event, property.id)}
+                          disabled={savingId === property.id}
+                          aria-label={savedProperties.has(property.id) ? 'Remove from saved homes' : 'Save home'}
+                          className="glass-control absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full text-foreground transition-transform duration-300 hover:scale-110"
+                        >
+                          {savingId === property.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Heart className={`h-4 w-4 ${savedProperties.has(property.id) ? 'fill-red-500 text-red-500' : ''}`} />
+                          )}
+                        </button>
+                        <p className="absolute bottom-4 left-4 display-title text-xl text-white">{formatPrice(property.price)}</p>
+                      </div>
+                      <div className="p-5">
+                        <h3 className="truncate text-[15px] font-semibold tracking-tight">{property.title}</h3>
+                        <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                          <MapPin className="h-3.5 w-3.5" />
+                          <span className="truncate">{property.city}, {property.state}</span>
+                        </p>
+                        <div className="mt-4 flex items-center gap-4 border-t border-border/70 pt-3 text-xs text-muted-foreground">
+                          {property.beds > 0 && <span className="flex items-center gap-1.5"><Bed className="h-4 w-4" />{property.beds}</span>}
+                          {property.baths > 0 && <span className="flex items-center gap-1.5"><Bath className="h-4 w-4" />{Math.floor(property.baths)}</span>}
+                          {property.sqft > 0 && <span className="flex items-center gap-1.5"><Square className="h-4 w-4" />{property.sqft.toLocaleString()}</span>}
                         </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                      {property.status === 'ACTIVE' && (
-                        <span className="absolute top-3 left-3 px-3 py-1 bg-green-500 text-white text-xs font-medium rounded-full">For Sale</span>
-                      )}
-                      <button 
-                        onClick={(e) => handleSave(e, property.id)}
-                        className="absolute top-3 right-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-                      >
-                        <Heart className={`w-4 h-4 ${savedProperties.has(property.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
-                      </button>
-                      <div className="absolute bottom-3 left-3 right-3">
-                        <p className="text-xl font-bold text-white">{formatPrice(property.price)}</p>
                       </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </motion.div>
+            ) : (
+              <div className="surface-card px-6 py-16 text-center">
+                <span className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-primary/10 text-primary">
+                  <Home className="h-8 w-8" />
+                </span>
+                <h3 className="display-title mt-5 text-xl">No properties yet</h3>
+                <p className="mt-2 text-sm text-muted-foreground">Be the first to list a property on HomeVista.</p>
+              </div>
+            )}
+          </motion.div>
+        </section>
+
+        <section className="border-y border-border/70 bg-card/45 py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger}>
+              <motion.div variants={reveal} className="mx-auto mb-14 max-w-2xl text-center">
+                <span className="eyebrow">Why HomeVista</span>
+                <h2 className="display-title mt-3 text-3xl sm:text-4xl">Everything you need, nothing you don&apos;t</h2>
+                <p className="mt-3 text-sm text-muted-foreground">A focused experience built around the decisions that actually matter.</p>
+              </motion.div>
+
+              <motion.div variants={stagger} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                {features.map((feature) => (
+                  <motion.div key={feature.title} variants={reveal} className="tilt-scene">
+                    <div className="tilt-card surface-card surface-card-hover h-full p-6">
+                      <span className={`grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ${feature.tint}`}>
+                        <feature.icon className={`h-5 w-5 ${feature.iconClass}`} />
+                      </span>
+                      <h3 className="mt-6 text-[15px] font-semibold tracking-tight">{feature.title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{feature.description}</p>
                     </div>
-                    <div className="p-4">
-                      <h3 className="font-semibold truncate group-hover:text-primary transition-colors">{property.title}</h3>
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
-                        <MapPin className="w-3.5 h-3.5" />
-                        <span className="truncate">{property.city}, {property.state}</span>
-                      </div>
-                      <div className="flex items-center gap-4 mt-3 text-sm text-muted-foreground">
-                        {property.beds > 0 && <span className="flex items-center gap-1"><Bed className="w-4 h-4" />{property.beds}</span>}
-                        {property.baths > 0 && <span className="flex items-center gap-1"><Bath className="w-4 h-4" />{Math.floor(property.baths)}</span>}
-                        {property.sqft > 0 && <span className="flex items-center gap-1"><Square className="w-4 h-4" />{property.sqft.toLocaleString()}</span>}
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger}>
+            <motion.div variants={reveal} className="mx-auto mb-14 max-w-2xl text-center">
+              <span className="eyebrow">Stories</span>
+              <h2 className="display-title mt-3 text-3xl sm:text-4xl">Good news, from real people</h2>
+              <p className="mt-3 text-sm text-muted-foreground">Thousands of journeys, one common thread: less guesswork.</p>
+            </motion.div>
+
+            <motion.div variants={stagger} className="grid gap-5 md:grid-cols-3">
+              {testimonials.map((testimonial) => (
+                <motion.figure key={testimonial.name} variants={reveal} className="surface-card surface-card-hover flex h-full flex-col p-7">
+                  <div className="flex gap-1 text-amber-400">
+                    {[...Array(5)].map((_, index) => <Star key={index} className="h-4 w-4 fill-current" />)}
+                  </div>
+                  <blockquote className="mt-5 flex-1 text-sm leading-relaxed text-foreground/80">
+                    &ldquo;{testimonial.text}&rdquo;
+                  </blockquote>
+                  <figcaption className="mt-7 flex items-center gap-3 border-t border-border/70 pt-5">
+                    <Image src={testimonial.image} alt={testimonial.name} width={40} height={40} className="rounded-full object-cover" />
+                    <span>
+                      <span className="block text-sm font-semibold">{testimonial.name}</span>
+                      <span className="block text-xs text-muted-foreground">{testimonial.role}</span>
+                    </span>
+                  </figcaption>
+                </motion.figure>
               ))}
             </motion.div>
-          ) : (
-            <div className="text-center py-16">
-              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                <Home className="w-8 h-8 text-muted-foreground" />
+          </motion.div>
+        </section>
+
+        <section className="px-4 pb-24 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="relative mx-auto max-w-7xl overflow-hidden rounded-[36px]"
+          >
+            <Image
+              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80"
+              alt="Modern home exterior"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#05070c]/85 via-[#05070c]/65 to-[#05070c]/30" />
+            <div className="relative grid gap-8 px-8 py-16 sm:px-14 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:py-20">
+              <div>
+                <span className="eyebrow text-white/70">Your next chapter</span>
+                <h2 className="display-title mt-4 max-w-xl text-3xl text-white sm:text-5xl">Let&apos;s find a place that feels like yours.</h2>
+                <p className="mt-4 max-w-md text-sm text-white/70 sm:text-base">
+                  Start with a search. We&apos;ll take care of the rest, one thoughtful step at a time.
+                </p>
               </div>
-              <h3 className="text-lg font-semibold">No Properties Yet</h3>
-              <p className="text-muted-foreground">Be the first to list a property!</p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="py-20 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl font-bold tracking-tight">Why Choose HomeVista</h2>
-            <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">We make finding your dream home easier with cutting-edge technology.</p>
-          </motion.div>
-
-          <motion.div 
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {features.map((feature, idx) => (
-              <motion.div key={idx} variants={item} className="p-6 rounded-2xl border border-border bg-card hover:shadow-lg transition-shadow">
-                <div className={`w-12 h-12 ${feature.color} rounded-xl flex items-center justify-center mb-4`}>
-                  <feature.icon className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 bg-secondary/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl font-bold tracking-tight">What Our Clients Say</h2>
-            <p className="text-muted-foreground mt-2">Join thousands of happy homeowners</p>
-          </motion.div>
-
-          <motion.div 
-            variants={container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="grid md:grid-cols-3 gap-6"
-          >
-            {testimonials.map((testimonial, idx) => (
-              <motion.div key={idx} variants={item} className="p-6 rounded-2xl bg-card border border-border">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => <Star key={i} className="w-4 h-4 fill-orange-400 text-orange-400" />)}
-                </div>
-                <p className="text-muted-foreground mb-6">"{testimonial.text}"</p>
-                <div className="flex items-center gap-3">
-                  <Image src={testimonial.image} alt={testimonial.name} width={40} height={40} className="rounded-full" />
-                  <div>
-                    <p className="font-medium">{testimonial.name}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0">
-          <Image src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80" alt="Luxury home" fill className="object-cover" />
-          <div className="absolute inset-0 bg-black/70" />
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Ready to Find Your Perfect Home?</h2>
-            <p className="text-white/80 mb-8 max-w-xl mx-auto">Start your search today and get access to exclusive listings.</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/search" className="px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-colors inline-flex items-center justify-center gap-2">
-                Start Searching <Search className="w-5 h-5" />
-              </Link>
-              <Link href="/auth/signup" className="px-6 py-3 bg-white text-foreground font-semibold rounded-xl hover:bg-white/90 transition-colors inline-flex items-center justify-center gap-2">
-                Create Free Account
-              </Link>
+              <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
+                <Link href="/search" className="btn-smooth h-12 rounded-2xl px-6 text-sm">Start searching</Link>
+                <Link href="/auth/signup" className="glass-control grid h-12 place-items-center rounded-2xl px-6 text-sm font-semibold text-white">Create free account</Link>
+              </div>
             </div>
           </motion.div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* Footer */}
-      <footer className="bg-secondary text-secondary-foreground py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            <div className="col-span-2 md:col-span-1">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
-                  <Home className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold">HomeVista</span>
-              </Link>
-              <p className="text-sm text-muted-foreground">Your trusted partner in finding the perfect home.</p>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/search" className="hover:text-foreground">Browse</Link></li>
-                <li><Link href="/buy" className="hover:text-foreground">Buy</Link></li>
-                <li><Link href="/rent" className="hover:text-foreground">Rent</Link></li>
-                <li><Link href="/sell" className="hover:text-foreground">Sell</Link></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/mortgage" className="hover:text-foreground">Mortgage Calculator</Link></li>
-                <li><Link href="/agent" className="hover:text-foreground">Find Agents</Link></li>
-                <li><Link href="/help" className="hover:text-foreground">Help Center</Link></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/about" className="hover:text-foreground">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-foreground">Contact</Link></li>
-                <li><Link href="/privacy" className="hover:text-foreground">Privacy</Link></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-muted-foreground">© 2026 HomeVista. All rights reserved.</p>
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <Link href="/terms" className="hover:text-foreground">Terms</Link>
-              <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }

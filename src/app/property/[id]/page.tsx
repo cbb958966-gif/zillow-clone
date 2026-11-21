@@ -1,20 +1,19 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useParams, useRouter, usePathname } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
-import { useAuth } from '@/context/AuthContext'
-import { motion, AnimatePresence } from 'framer-motion'
-import ImageGallery from '@/components/ImageGallery'
+import { motion } from 'framer-motion'
 import ImageLightbox from '@/components/ImageLightbox'
 import ContactAgentForm from '@/components/ContactAgentForm'
-import ThemeToggle from '@/components/ThemeToggle'
+import SiteHeader from '@/components/SiteHeader'
+import SiteFooter from '@/components/SiteFooter'
 import { 
-  Bed, Bath, Square, Calendar, Home, MapPin, Share2, Heart, Printer, Phone, Mail,
-  ChevronLeft, ChevronRight, Car, Trees, Waves, Flame, Building2, Ruler, Layers,
-  Clock, DollarSign, TrendingUp, ArrowUp, School, Store, Hospital, Train, Images
+  Bed, Bath, Square, Calendar, Home, MapPin, Phone, Mail,
+  ChevronRight, Car, Trees, Waves, Flame, Building2, Ruler, Layers,
+  Clock, DollarSign, School, Store, Hospital, Train, Images
 } from 'lucide-react'
 
 const MapView = dynamic(() => import('@/components/MapView'), { 
@@ -96,8 +95,6 @@ const nearbyPlaces = [
 export default function PropertyDetail() {
   const params = useParams()
   const router = useRouter()
-  const pathname = usePathname()
-  const { user, logout } = useAuth()
   const [property, setProperty] = useState<Property | null>(null)
   const [loading, setLoading] = useState(true)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
@@ -127,27 +124,7 @@ export default function PropertyDetail() {
     }
   }
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: property?.title,
-          text: property?.description,
-          url: window.location.href,
-        })
-      } catch (error) {
-        console.error('Share failed:', error)
-      }
-    } else {
-      navigator.clipboard.writeText(window.location.href)
-      alert('Link copied to clipboard!')
-    }
-  }
 
-  const handleSignOut = () => {
-    logout()
-    router.push('/')
-  }
 
   if (loading) {
     return (
@@ -177,56 +154,14 @@ export default function PropertyDetail() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:scale-110 transition-transform">
-                <Home className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-foreground">HomeVista</span>
-            </Link>
-            <nav className="hidden lg:flex items-center gap-2">
-              {[{href:'/buy',label:'Buy'},{href:'/rent',label:'Rent'},{href:'/sell',label:'Sell'},{href:'/search',label:'Browse'},{href:'/mortgage',label:'Mortgage'}].map((link) => (
-                <Link key={link.href} href={link.href} className={`px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
-                  pathname?.startsWith(link.href)
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                }`}>{link.label}</Link>
-              ))}
-            </nav>
-            <div className="flex items-center gap-3">
-              <ThemeToggle />
-              <button onClick={handleShare} className="p-2.5 hover:bg-secondary rounded-xl transition-colors" title="Share">
-                <Share2 className="w-5 h-5 text-muted-foreground" />
-              </button>
-              <button className="p-2.5 hover:bg-secondary rounded-xl transition-colors" title="Save">
-                <Heart className="w-5 h-5 text-muted-foreground" />
-              </button>
-              <button onClick={() => setShowContactForm(true)} className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-xl hover:from-cyan-400 hover:to-blue-500 transition-all shadow-lg shadow-cyan-500/30">
-                <Phone className="w-4 h-4" />Contact Agent
-              </button>
-              {user ? (
-                <button onClick={handleSignOut} className="px-4 py-2 rounded-xl font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-all">Sign Out</button>
-              ) : (
-                <Link href="/auth/signin" className="px-4 py-2 rounded-xl font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-all">Sign In</Link>
-              )}
-            </div>
-          </div>
-        </div>
-      </motion.header>
+      <SiteHeader />
 
       {/* Breadcrumb */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="bg-secondary border-b border-border pt-20"
+        className="glass-control border-b border-border pt-20"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -303,11 +238,11 @@ export default function PropertyDetail() {
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-3">
-                    <span className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm ${property.status === 'ACTIVE' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : property.status === 'PENDING' ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white' : 'bg-secondary text-muted-foreground'}`}>
+                    <span className={`pill px-4 py-1.5 text-xs font-bold uppercase tracking-wide ${property.status === 'ACTIVE' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : property.status === 'PENDING' ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white' : 'bg-secondary text-muted-foreground'}`}>
                       {property.status === 'ACTIVE' ? 'For Sale' : property.status}
                     </span>
                     <span className="text-sm font-medium text-muted-foreground">|</span>
-                    <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">{property.propertyType.replace(/_/g, ' ')}</span>
+                    <span className="pill text-sm font-semibold text-muted-foreground uppercase tracking-wider">{property.propertyType.replace(/_/g, ' ')}</span>
                   </div>
                   <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground mb-2 leading-tight">{property.address}</h1>
                   <div className="flex items-center gap-2">
@@ -363,7 +298,7 @@ export default function PropertyDetail() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="rounded-2xl bg-card border border-border p-6"
+              className="surface-card surface-card-hover p-6"
             >
               <div className="flex items-end justify-between">
                 <div>
@@ -409,7 +344,7 @@ export default function PropertyDetail() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="rounded-2xl bg-card border border-border overflow-hidden"
+              className="surface-card overflow-hidden"
             >
               <div className="border-b border-border overflow-x-auto">
                 <div className="flex min-w-max md:min-w-0">
@@ -583,7 +518,7 @@ export default function PropertyDetail() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="rounded-2xl bg-card border border-border p-6"
+                className="surface-card surface-card-hover p-6"
               >
                 <h3 className="text-lg font-semibold text-foreground mb-4">Location</h3>
                 <div className="h-80 rounded-xl overflow-hidden">
@@ -604,7 +539,7 @@ export default function PropertyDetail() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
-              className="rounded-2xl bg-card border border-border p-6 sticky top-24"
+              className="surface-card p-6 sticky top-24"
             >
               <div className="text-center mb-6">
                 <div className="text-3xl font-bold text-primary mb-1">${property.price.toLocaleString()}</div>
@@ -658,7 +593,7 @@ export default function PropertyDetail() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 }}
-              className="rounded-2xl bg-card border border-border p-6"
+              className="surface-card surface-card-hover p-6"
             >
               <h3 className="text-lg font-semibold text-foreground mb-4">Estimate Your Payment</h3>
               <div className="space-y-4">
@@ -699,58 +634,7 @@ export default function PropertyDetail() {
         />
       )}
 
-      {/* Footer */}
-      <motion.footer
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className="bg-secondary text-secondary-foreground py-16 mt-12"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            <div className="col-span-2 md:col-span-1">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
-                  <Home className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold">HomeVista</span>
-              </Link>
-              <p className="text-sm text-muted-foreground">Your trusted partner in finding the perfect home.</p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/search" className="hover:text-foreground">Browse</Link></li>
-                <li><Link href="/buy" className="hover:text-foreground">Buy</Link></li>
-                <li><Link href="/rent" className="hover:text-foreground">Rent</Link></li>
-                <li><Link href="/sell" className="hover:text-foreground">Sell</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/mortgage" className="hover:text-foreground">Mortgage Calculator</Link></li>
-                <li><Link href="/help" className="hover:text-foreground">Help Center</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/about" className="hover:text-foreground">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-foreground">Contact</Link></li>
-                <li><Link href="/privacy" className="hover:text-foreground">Privacy</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-muted-foreground">&copy; 2026 HomeVista. All rights reserved.</p>
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <Link href="/terms" className="hover:text-foreground">Terms</Link>
-              <Link href="/privacy" className="hover:text-foreground">Privacy</Link>
-            </div>
-          </div>
-        </div>
-      </motion.footer>
+      <SiteFooter />
     </div>
   )
 }

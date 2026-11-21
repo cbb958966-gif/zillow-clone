@@ -5,6 +5,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { NextAuthProvider } from '@/components/NextAuthProvider';
 import ToastContainerWrapper from '@/components/ToastContainerWrapper';
+import MotionProvider from '@/components/MotionProvider';
 import { Inter } from 'next/font/google';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -43,9 +44,11 @@ export default function RootLayout({
         <NextAuthProvider>
           <AuthProvider>
             <ThemeProvider>
-              <ErrorBoundary>
-                {children}
-              </ErrorBoundary>
+              <MotionProvider>
+                <ErrorBoundary>
+                  {children}
+                </ErrorBoundary>
+              </MotionProvider>
               <ToastContainerWrapper />
             </ThemeProvider>
           </AuthProvider>

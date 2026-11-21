@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import PropertyForm from '@/components/PropertyForm'
 import PropertyList from '@/components/PropertyList'
-import { Home, Building, Users, BarChart3, Plus, Menu, X, Bell, Search, MoreVertical, Trash2, Edit, Shield, Mail, Phone, Calendar, Eye, EyeOff } from 'lucide-react'
+import { Home, Building, Users, BarChart3, Plus, Search, Trash2, Mail, Phone } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
+import SiteFooter from '@/components/SiteFooter'
 
 interface User {
   id: string
@@ -22,10 +23,8 @@ interface User {
 }
 
 export default function AdminDashboard() {
-  const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'properties' | 'users' | 'analytics'>('properties')
-  const [sidebarOpen, setSidebarOpen] = useState(false)
   
   // Users state
   const [users, setUsers] = useState<User[]>([])
@@ -64,7 +63,6 @@ export default function AdminDashboard() {
           window.location.href = '/'
           return
         }
-        setUser(data.user)
       } else {
         window.location.href = '/auth/signin'
       }
@@ -139,56 +137,28 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0066cc]"></div>
+      <div className="min-h-screen bg-gray-50">
+        <SiteHeader />
+        <div className="flex min-h-[60vh] items-center justify-center pt-24">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0066cc]"></div>
+        </div>
+        <SiteFooter />
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Top Navigation */}
-      <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
-        <div className="container-main">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center gap-4">
-              <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl">
-                {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
-              <Link href="/" className="flex items-center gap-2 group">
-                <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:scale-110 transition-transform">
-                  <Home className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-2xl font-bold text-gray-900 dark:text-white">HomeVista</span>
-              </Link>
-            </div>
-            <div className="hidden md:flex items-center gap-4">
-              <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input type="text" placeholder="Search..." className="pl-10 pr-4 py-2.5 bg-gray-100 border-0 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 w-64" />
-              </div>
-              <button className="p-2.5 hover:bg-gray-100 rounded-xl relative">
-                <Bell className="w-5 h-5 text-gray-600" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-              </button>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-white font-semibold text-sm">{user?.firstName?.[0] || 'A'}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
-      <div className="container-main py-8">
+      <div className="container-main pb-8 pt-24">
         {/* Page Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-[#1a1a2e]">Admin Dashboard</h1>
             <p className="text-gray-500 mt-1">Manage your real estate platform</p>
           </div>
-          <button className="btn-primary flex items-center gap-2">
+          <button className="btn-smooth flex items-center gap-2">
             <Plus className="w-4 h-4" /> Add Property
           </button>
         </div>
@@ -196,7 +166,7 @@ export default function AdminDashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat, idx) => (
-            <div key={idx} className="card-modern p-6">
+            <div key={idx} className="card-modern surface-card surface-card-hover p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center`}>
                   <stat.icon className="w-6 h-6 text-white" />
@@ -210,7 +180,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="card-modern overflow-hidden mb-8">
+        <div className="card-modern surface-card overflow-hidden mb-8">
           <div className="border-b border-gray-200 bg-gray-50">
             <div className="flex">
               {[
@@ -257,7 +227,7 @@ export default function AdminDashboard() {
               <div>
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
                   <h2 className="text-xl font-semibold text-gray-900">User Management</h2>
-                  <div className="flex items-center gap-3">
+                  <div className="glass-control flex items-center gap-3 rounded-2xl p-2">
                     <div className="relative">
                       <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                       <input 
@@ -410,20 +380,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="footer-main mt-12">
-        <div className="container-main">
-          <div className="flex items-center justify-between py-6">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                <Home className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-white font-semibold">HomeVista</span>
-            </div>
-            <div className="text-white/50 text-sm">© 2026 HomeVista Admin</div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }

@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import ThemeToggle from '@/components/ThemeToggle'
-import { Menu, X, Home, Heart, User, Bed, Bath, Square, MapPin, Trash2, Calendar, Mail, Phone, LogOut, Shield, Search, Bell } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
+import SiteFooter from '@/components/SiteFooter'
+import { Home, Heart, User, Bed, Bath, Square, MapPin, Trash2, Calendar, Mail, Phone, LogOut, Shield, Search } from 'lucide-react'
 
 interface Property {
   id: string
@@ -42,13 +43,11 @@ const item = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }
 
 export default function Dashboard() {
   const router = useRouter()
-  const pathname = usePathname()
   const [activeTab, setActiveTab] = useState('saved')
   const [user, setUser] = useState<UserData['user'] | null>(null)
   const [loading, setLoading] = useState(true)
   const [savedProperties, setSavedProperties] = useState<Property[]>([])
   const [propertiesLoading, setPropertiesLoading] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -130,14 +129,6 @@ export default function Dashboard() {
 
   const formatPrice = (price: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price)
 
-  const navLinks = [
-    { href: '/search', label: 'Browse' },
-    { href: '/buy', label: 'Buy' },
-    { href: '/rent', label: 'Rent' },
-    { href: '/sell', label: 'Sell' },
-    { href: '/mortgage', label: 'Mortgage' },
-  ]
-
   const stats = [
     { label: 'Saved Properties', value: savedProperties.length, icon: Heart, color: 'bg-pink-500' },
     { label: 'Account Type', value: user?.role || 'User', icon: Shield, color: 'bg-purple-500' },
@@ -156,83 +147,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-9 h-9 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:scale-105 transition-transform">
-                <Home className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold tracking-tight">HomeVista</span>
-            </Link>
-
-            <nav className="hidden md:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                    pathname === link.href
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-foreground/70 hover:text-foreground hover:bg-secondary/50'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            <div className="hidden md:flex items-center gap-3">
-              <ThemeToggle />
-              <button className="p-2 text-foreground/70 hover:text-foreground hover:bg-secondary rounded-lg transition-colors relative">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-              </button>
-              <div className="flex items-center gap-2 pl-2 border-l border-border">
-                <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-white font-semibold text-sm">{(user.firstName || user.email || 'U')[0].toUpperCase()}</span>
-                </div>
-                <span className="text-sm font-medium">{user.firstName || 'User'}</span>
-              </div>
-            </div>
-
-            <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-border bg-background"
-            >
-              <div className="px-4 py-4 space-y-2">
-                {navLinks.map((link) => (
-                  <Link key={link.href} href={link.href} className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">
-                    {link.label}
-                  </Link>
-                ))}
-                <hr className="my-2 border-border" />
-                <Link href="/dashboard" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Dashboard</Link>
-                <Link href="/dashboard/saved" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Saved Properties</Link>
-                {user.role === 'ADMIN' && <Link href="/admin" className="block px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary rounded-lg">Admin</Link>}
-                <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm font-medium text-red-500 hover:bg-secondary rounded-lg">
-                  Sign Out
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.header>
+      <SiteHeader />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8">
         {/* Welcome Header */}
@@ -255,7 +170,7 @@ export default function Dashboard() {
           className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
         >
           {stats.map((stat, idx) => (
-            <motion.div key={idx} variants={item} className="rounded-2xl bg-card border border-border p-6">
+            <motion.div key={idx} variants={item} className="surface-card surface-card-hover p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center`}>
                   <stat.icon className="w-6 h-6 text-white" />
@@ -268,8 +183,8 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Tabs */}
-        <div className="rounded-2xl bg-card border border-border overflow-hidden mb-8">
-          <div className="border-b border-border bg-secondary/50 overflow-x-auto">
+        <div className="surface-card overflow-hidden mb-8">
+          <div className="glass-control border-b border-border overflow-x-auto">
             <div className="flex min-w-max md:min-w-0">
               {[
                 { id: 'saved', label: 'Saved Properties', icon: Heart },
@@ -320,7 +235,7 @@ export default function Dashboard() {
                       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                     >
                       {savedProperties.map((property) => (
-                        <motion.div key={property.id} variants={item} className="rounded-2xl bg-card border border-border overflow-hidden group">
+                        <motion.div key={property.id} variants={item} className="surface-card surface-card-hover overflow-hidden group">
                           <div className="relative aspect-[4/3] overflow-hidden">
                             {property.images?.[0] ? (
                               <Image src={property.images[0].url} alt={property.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -405,7 +320,7 @@ export default function Dashboard() {
                   </div>
 
                   <div className="space-y-6">
-                    <div className="rounded-2xl bg-card border border-border p-6">
+                    <div className="surface-card surface-card-hover p-6">
                       <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                         <User className="w-5 h-5" /> Personal Information
                       </h3>
@@ -455,58 +370,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-secondary text-secondary-foreground py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            <div className="col-span-2 md:col-span-1">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <div className="w-9 h-9 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-cyan-500/30">
-                  <Home className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold">HomeVista</span>
-              </Link>
-              <p className="text-sm text-muted-foreground">Your trusted partner in finding the perfect home.</p>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/search" className="hover:text-foreground transition-colors">Browse</Link></li>
-                <li><Link href="/buy" className="hover:text-foreground transition-colors">Buy</Link></li>
-                <li><Link href="/rent" className="hover:text-foreground transition-colors">Rent</Link></li>
-                <li><Link href="/sell" className="hover:text-foreground transition-colors">Sell</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/mortgage" className="hover:text-foreground transition-colors">Mortgage Calculator</Link></li>
-                <li><Link href="/agent" className="hover:text-foreground transition-colors">Find Agents</Link></li>
-                <li><Link href="/help" className="hover:text-foreground transition-colors">Help Center</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/about" className="hover:text-foreground transition-colors">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link></li>
-                <li><Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-muted-foreground">&copy; 2026 HomeVista. All rights reserved.</p>
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
-              <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }

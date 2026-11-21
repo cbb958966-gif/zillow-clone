@@ -131,7 +131,7 @@ export default function Dashboard() {
 
   const stats = [
     { label: 'Saved Properties', value: savedProperties.length, icon: Heart, color: 'bg-pink-500' },
-    { label: 'Account Type', value: user?.role || 'User', icon: Shield, color: 'bg-purple-500' },
+    { label: 'Account Type', value: user?.role || 'User', icon: Shield, color: 'bg-purple-500', href: user?.role === 'ADMIN' || user?.role === 'admin' ? '/admin' : undefined },
     { label: 'Member Since', value: user?.createdAt ? new Date(user.createdAt).getFullYear() : 'N/A', icon: Calendar, color: 'bg-blue-500' },
   ]
 
@@ -169,17 +169,24 @@ export default function Dashboard() {
           animate="show"
           className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
         >
-          {stats.map((stat, idx) => (
-            <motion.div key={idx} variants={item} className="surface-card surface-card-hover p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center`}>
-                  <stat.icon className="w-6 h-6 text-white" />
+          {stats.map((stat, idx) => {
+            const card = (
+              <div className="surface-card surface-card-hover p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center`}>
+                    <stat.icon className="w-6 h-6 text-white" />
+                  </div>
                 </div>
+                <div className="text-2xl font-bold text-foreground mb-1">{stat.value}</div>
+                <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
-              <div className="text-2xl font-bold text-foreground mb-1">{stat.value}</div>
-              <div className="text-sm text-muted-foreground">{stat.label}</div>
-            </motion.div>
-          ))}
+            )
+            return (
+              <motion.div key={idx} variants={item}>
+                {stat.href ? <Link href={stat.href} className="block cursor-pointer">{card}</Link> : card}
+              </motion.div>
+            )
+          })}
         </motion.div>
 
         {/* Tabs */}

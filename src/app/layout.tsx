@@ -7,6 +7,7 @@ import { NextAuthProvider } from '@/components/NextAuthProvider';
 import ToastContainerWrapper from '@/components/ToastContainerWrapper';
 import { Inter } from 'next/font/google';
 import 'react-toastify/dist/ReactToastify.css';
+import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -50,6 +51,7 @@ export default function RootLayout({
             </ThemeProvider>
           </AuthProvider>
         </NextAuthProvider>
+        <Analytics />
       </body>
     </html>
   );

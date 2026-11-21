@@ -122,9 +122,9 @@ export default function PropertyCard({ property, variant = 'default', showSaveBu
             {property.status === 'ACTIVE' ? (
               <span className="property-card-badge sale">For Sale</span>
             ) : property.status === 'PENDING' ? (
-              <span className="property-card-badge" style={{ background: '#f59e0b' }}>Pending</span>
+              <span className="property-card-badge pending">Pending</span>
             ) : (
-              <span className="property-card-badge" style={{ background: '#6b7280' }}>Sold</span>
+              <span className="property-card-badge sold">Sold</span>
             )}
           </div>
           
@@ -181,7 +181,7 @@ export default function PropertyCard({ property, variant = 'default', showSaveBu
             
             <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
               <div className="property-card-price">
-                <span className="text-2xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
+                <span className="display-title bg-gradient-to-r from-[#0066cc] to-[#0071e3] bg-clip-text text-2xl text-transparent dark:from-[#64b5ff] dark:to-[#7ee0ff]">
                   {formatPrice(property.price)}
                 </span>
               </div>

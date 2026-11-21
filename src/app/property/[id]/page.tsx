@@ -307,7 +307,7 @@ export default function PropertyDetail() {
               <div className="flex items-end justify-between">
                 <div>
                   <div className="text-sm font-semibold text-muted-foreground mb-1">Listing Price</div>
-                  <div className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
+                  <div className="display-title bg-gradient-to-r from-[#0066cc] to-[#0071e3] bg-clip-text text-3xl text-transparent sm:text-4xl md:text-5xl dark:from-[#64b5ff] dark:to-[#7ee0ff]">
                     ${property.price.toLocaleString()}
                   </div>
                   {pricePerSqftFormatted && (

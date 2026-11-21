@@ -216,7 +216,7 @@ function SavedContent() {
                                 <Home className="w-12 h-12 text-muted-foreground" />
                               </div>
                             )}
-                            <span className="absolute top-3 left-3 px-3 py-1 bg-green-500 text-white text-xs font-medium rounded-full">For Sale</span>
+                            <span className="absolute top-3 left-3 rounded-full bg-emerald-700 px-3 py-1 text-xs font-medium text-white">For Sale</span>
                             <button
                               type="button"
                               onClick={(e) => {

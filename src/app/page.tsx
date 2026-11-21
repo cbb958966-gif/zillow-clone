@@ -175,13 +175,13 @@ export default function HomePage() {
                 <Image src={image} alt="Featured home" fill className="object-cover" priority={index === 0} />
               </motion.div>
             ))}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#05070c]/85 via-[#05070c]/55 to-[#05070c]/20" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#05070c]/90 via-[#05070c]/68 to-[#05070c]/38" />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-[#05070c]/40" />
           </div>
 
           <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-14 sm:px-6 lg:px-8">
             <motion.div initial="hidden" animate="show" variants={stagger} className="max-w-3xl">
-              <motion.div variants={reveal} className="glass-control inline-flex items-center gap-2 rounded-full px-4 py-2 text-white">
+              <motion.div variants={reveal} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/25 px-4 py-2 text-white backdrop-blur-md">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
@@ -201,7 +201,7 @@ export default function HomePage() {
               <motion.form
                 variants={reveal}
                 onSubmit={handleSearch}
-                className="glass-control mt-9 flex w-full max-w-2xl flex-col gap-2 rounded-[28px] p-2 sm:flex-row sm:items-center sm:rounded-full"
+                className="mt-9 flex w-full max-w-2xl flex-col gap-2 rounded-[28px] border border-white/20 bg-black/25 p-2 backdrop-blur-md sm:flex-row sm:items-center sm:rounded-full"
               >
                 <div className="relative flex-1">
                   <Search className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-white/60" />
@@ -239,7 +239,7 @@ export default function HomePage() {
                   <Link
                     key={tag}
                     href={`/search?type=${tag.toUpperCase().slice(0, -1)}`}
-                    className="glass-control rounded-full px-4 py-2 text-xs font-medium text-white/85 transition-all duration-300 hover:-translate-y-0.5 hover:text-white"
+                    className="rounded-full border border-white/20 bg-black/25 px-4 py-2 text-xs font-medium text-white/90 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-black/40 hover:text-white"
                   >
                     {tag}
                   </Link>
@@ -497,7 +497,7 @@ export default function HomePage() {
               </div>
               <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
                 <Link href="/search" className="btn-smooth h-12 rounded-2xl px-6 text-sm">Start searching</Link>
-                <Link href="/auth/signup" className="glass-control grid h-12 place-items-center rounded-2xl px-6 text-sm font-semibold text-white">Create free account</Link>
+                <Link href="/auth/signup" className="grid h-12 place-items-center rounded-2xl border border-white/20 bg-black/25 px-6 text-sm font-semibold text-white backdrop-blur-md transition-colors hover:bg-black/40">Create free account</Link>
               </div>
             </div>
           </motion.div>

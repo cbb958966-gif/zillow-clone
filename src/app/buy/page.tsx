@@ -476,11 +476,11 @@ function BuyContent() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
                         {property.status === 'ACTIVE' ? (
-                          <span className="pill absolute top-3 left-3 px-3 py-1 bg-emerald-500 text-white text-xs font-medium rounded-full">For Sale</span>
+                          <span className="pill absolute top-3 left-3 border-transparent bg-emerald-700 px-3 py-1 text-xs font-medium text-white">For Sale</span>
                         ) : property.status === 'PENDING' ? (
-                          <span className="pill absolute top-3 left-3 px-3 py-1 bg-amber-500 text-white text-xs font-medium rounded-full">Pending</span>
+                          <span className="pill absolute top-3 left-3 border-transparent bg-amber-700 px-3 py-1 text-xs font-medium text-white">Pending</span>
                         ) : (
-                          <span className="pill absolute top-3 left-3 px-3 py-1 bg-muted-foreground text-white text-xs font-medium rounded-full">Sold</span>
+                          <span className="pill absolute top-3 left-3 border-border bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">Sold</span>
                         )}
 
                         <button

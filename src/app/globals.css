@@ -4,6 +4,7 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 :root {
+  color-scheme: light;
   --background: #f5f6f8;
   --foreground: #111827;
   --card: #ffffff;
@@ -733,12 +734,21 @@ a:hover {
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
-  color: white;
-  background: #10b981;
+  color: #ffffff;
+  background: #047857;
 }
 
 .property-card-badge.sale {
-  background: #10b981;
+  background: #047857;
+}
+
+.property-card-badge.pending {
+  background: #b45309;
+}
+
+.property-card-badge.sold {
+  color: var(--secondary-foreground);
+  background: var(--secondary);
 }
 
 /* Property Card Favorite */

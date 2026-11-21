@@ -311,7 +311,9 @@ function SearchContent() {
                           </div>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                        <span className="pill absolute top-3 left-3 px-3 py-1 bg-emerald-500 text-white text-xs font-medium rounded-full">{property.status === 'ACTIVE' ? 'For Sale' : property.status}</span>
+                        <span className={`pill absolute top-3 left-3 px-3 py-1 text-xs font-medium ${property.status === 'ACTIVE' ? 'border-transparent bg-emerald-700 text-white' : property.status === 'PENDING' ? 'border-transparent bg-amber-700 text-white' : 'border-border bg-secondary text-secondary-foreground'}`}>
+                          {property.status === 'ACTIVE' ? 'For Sale' : property.status === 'PENDING' ? 'Pending' : property.status}
+                        </span>
                         <button type="button" onClick={(e) => handleSave(e, property.id)} disabled={savingId === property.id}
                           className="absolute top-3 right-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:scale-110 transition-transform">
                           {savingId === property.id ? (

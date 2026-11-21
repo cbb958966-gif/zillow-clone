@@ -6,13 +6,14 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import ImageLightbox from '@/components/ImageLightbox'
+import Property3DViewer from '@/components/Property3DViewer'
 import ContactAgentForm from '@/components/ContactAgentForm'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import { 
   Bed, Bath, Square, Calendar, Home, MapPin, Phone, Mail,
   ChevronRight, Car, Trees, Waves, Flame, Building2, Ruler, Layers,
-  Clock, DollarSign, School, Store, Hospital, Train, Images, Star, TrendingUp
+  Clock, DollarSign, School, Store, Hospital, Train, Images, Star, TrendingUp, Box
 } from 'lucide-react'
 
 const MapView = dynamic(() => import('@/components/MapView'), { 
@@ -99,6 +100,7 @@ export default function PropertyDetail() {
   const [loading, setLoading] = useState(true)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [showContactForm, setShowContactForm] = useState(false)
+  const [show3DTour, setShow3DTour] = useState(false)
   const [activeTab, setActiveTab] = useState('overview')
 
   useEffect(() => {
@@ -236,10 +238,17 @@ export default function PropertyDetail() {
               </div>
             ))}
           </motion.div>
-          <div className="flex items-center justify-between mt-4">
-            <button className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-sm font-medium hover:bg-secondary">
-              <Images className="w-4 h-4" />View all {property.images?.length || 0} photos
-            </button>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap gap-2">
+              <button onClick={() => setLightboxIndex(0)} className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium hover:bg-secondary">
+                <Images className="w-4 h-4" />View all {property.images?.length || 0} photos
+              </button>
+              {Boolean(property.images?.length) && (
+                <button onClick={() => setShow3DTour(true)} className="flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/20">
+                  <Box className="w-4 h-4" />3D Tour
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -679,6 +688,19 @@ export default function PropertyDetail() {
           </div>
         </div>
       </div>
+
+      {show3DTour && property.images && property.images.length > 0 && (
+        <Property3DViewer
+          images={property.images.map((image) => ({
+            id: image.id,
+            url: image.url,
+            alt: image.alt,
+            description: image.description,
+          }))}
+          title={`${property.address}, ${property.city}, ${property.state}`}
+          onClose={() => setShow3DTour(false)}
+        />
+      )}
 
       {/* Lightbox */}
       {lightboxIndex !== null && property.images && (

@@ -8,7 +8,7 @@ import { useAuth } from '@/context/AuthContext'
 import { motion } from 'framer-motion'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
-import { Search as SearchIcon, Bed, Bath, Square, Heart, Home, ChevronLeft, ChevronRight, Grid, List, MapPin, X, Bookmark } from 'lucide-react'
+import { Search as SearchIcon, Bed, Bath, Square, Heart, Home, ChevronLeft, ChevronRight, Grid, List, MapPin, X, Bookmark, Box } from 'lucide-react'
 
 interface Property {
   id: string
@@ -79,6 +79,11 @@ function SearchCard({ property, viewMode, isSaved, saving, onSave, formatPrice }
               {property.status === 'ACTIVE' ? 'For Sale' : property.status === 'PENDING' ? 'Pending' : property.status}
             </span>
             {isNew && <span className="pill border-transparent bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">New</span>}
+            {hasMultiple && (
+              <span className="pill inline-flex items-center gap-1 border-transparent bg-white/90 px-3 py-1 text-xs font-medium text-black">
+                <Box className="h-3 w-3" />3D
+              </span>
+            )}
           </div>
 
           <button type="button" onClick={(event) => onSave(event, property.id)} disabled={saving}

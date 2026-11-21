@@ -8,6 +8,7 @@ import { motion } from 'framer-motion'
 import {
   ArrowRight,
   Bath,
+  Box,
   Bed,
   Building2,
   Heart,
@@ -379,6 +380,11 @@ export default function HomePage() {
                         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
                           {property.status === 'ACTIVE' && <span className="pill border-white/30 bg-black/35 text-white backdrop-blur-md">For sale</span>}
                           {property.propertyType && <span className="pill border-white/30 bg-black/35 text-white backdrop-blur-md">{property.propertyType.replace(/_/g, ' ')}</span>}
+                          {property.images && property.images.length > 1 && (
+                            <span className="pill inline-flex items-center gap-1 border-transparent bg-primary text-primary-foreground">
+                              <Box className="h-3 w-3" />3D
+                            </span>
+                          )}
                         </div>
                         {property.createdAt && new Date(property.createdAt).getTime() >= newListingCutoff && (
                           <span className="pill absolute bottom-4 right-3 border-transparent bg-primary text-primary-foreground">New</span>

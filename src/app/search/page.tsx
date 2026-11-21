@@ -3,12 +3,18 @@
 import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { motion } from 'framer-motion'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
-import { Search as SearchIcon, Bed, Bath, Square, Heart, Home, ChevronLeft, ChevronRight, Grid, List, MapPin, X, Bookmark, Box } from 'lucide-react'
+import { Search as SearchIcon, Bed, Bath, Square, Heart, Home, ChevronLeft, ChevronRight, Grid, List, Map, MapPin, X, Bookmark, Box } from 'lucide-react'
+
+const MapView = dynamic(() => import('@/components/MapView'), {
+  ssr: false,
+  loading: () => <div className="h-full bg-muted animate-pulse rounded-lg" />
+})
 
 interface Property {
   id: string
@@ -24,7 +30,9 @@ interface Property {
   propertyType: string
   status: string
   createdAt?: string
-  images: { url: string; isPrimary: boolean }[]
+  lat?: number | null
+  lng?: number | null
+  images: { id: string; url: string; isPrimary: boolean }[]
   agent?: { broker?: string | null }
 }
 
@@ -144,6 +152,7 @@ function SearchContent() {
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [showMap, setShowMap] = useState(false)
   const [savedProperties, setSavedProperties] = useState<Set<string>>(new Set())
   const [savingId, setSavingId] = useState<string | null>(null)
   const [searchSaved, setSearchSaved] = useState(false)
@@ -430,6 +439,10 @@ function SearchContent() {
                   <List className="w-4 h-4" />
                 </button>
               </div>
+              <button type="button" onClick={() => setShowMap(current => !current)} className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold transition-all ${showMap ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:bg-secondary hover:text-foreground'}`}>
+                <Map className="w-4 h-4" />
+                {showMap ? 'Hide map' : 'Map'}
+              </button>
             </div>
           </div>
         </div>
@@ -437,6 +450,17 @@ function SearchContent() {
 
       {/* Results */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {showMap && properties.length > 0 && (
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mb-8">
+            <div className="h-[400px] rounded-2xl overflow-hidden border border-border shadow-lg">
+              <MapView
+                properties={properties}
+                height="400px"
+                onPropertyClick={(property) => router.push(`/property/${property.id}`)}
+              />
+            </div>
+          </motion.div>
+        )}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (

@@ -26,6 +26,10 @@ import {
 } from 'lucide-react'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
+import { BlurFade } from '@/components/ui/blur-fade'
+import { BorderBeam } from '@/components/ui/border-beam'
+import { NumberTicker } from '@/components/ui/number-ticker'
+import { ShimmerButton } from '@/components/ui/shimmer-button'
 
 interface Property {
   id: string
@@ -66,10 +70,10 @@ const features = [
 ]
 
 const stats = [
-  { value: '2.5M+', label: 'Active listings', icon: Home },
-  { value: '50K+', label: 'Local agents', icon: Users },
-  { value: '10M+', label: 'Families helped', icon: Heart },
-  { value: '100+', label: 'Cities covered', icon: MapPin },
+  { value: 2.5, suffix: 'M+', decimals: 1, label: 'Active listings', icon: Home },
+  { value: 50, suffix: 'K+', decimals: 0, label: 'Local agents', icon: Users },
+  { value: 10, suffix: 'M+', decimals: 0, label: 'Families helped', icon: Heart },
+  { value: 100, suffix: '+', decimals: 0, label: 'Cities covered', icon: MapPin },
 ]
 
 const testimonials = [
@@ -229,13 +233,16 @@ export default function HomePage() {
                     </button>
                   )}
                 </div>
-                <button
+                <ShimmerButton
                   type="submit"
-                  className="btn-smooth group flex h-14 w-full items-center justify-center gap-2 rounded-[22px] px-7 text-sm sm:w-auto sm:shrink-0 sm:rounded-full"
+                  background="rgba(0, 113, 227, 1)"
+                  shimmerColor="rgba(255, 255, 255, 0.85)"
+                  borderRadius="9999px"
+                  className="h-14 w-full gap-2 px-7 text-sm sm:w-auto sm:shrink-0"
                 >
                   Search homes
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-                </button>
+                </ShimmerButton>
               </motion.form>
 
               <motion.div variants={reveal} className="mt-5 flex flex-wrap items-center gap-2">
@@ -249,6 +256,9 @@ export default function HomePage() {
                     {tag}
                   </Link>
                 ))}
+                <Link href="/search" className="uiverse-press-button ml-1">
+                  Open map view
+                </Link>
               </motion.div>
             </motion.div>
           </div>
@@ -279,10 +289,14 @@ export default function HomePage() {
                 <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
                   <stat.icon className="h-5 w-5" />
                 </span>
-                <span>
-                  <span className="block display-title text-2xl">{stat.value}</span>
-                  <span className="block text-xs text-muted-foreground">{stat.label}</span>
-                </span>
+                  <span>
+                    <span className="block display-title text-2xl">
+                      <NumberTicker value={stat.value} decimalPlaces={stat.decimals} delay={0.1} />
+                      {stat.suffix}
+                    </span>
+                    <span className="block text-xs text-muted-foreground">{stat.label}</span>
+                  </span>
+
               </div>
             ))}
           </motion.div>
@@ -302,31 +316,42 @@ export default function HomePage() {
             </motion.div>
 
             <motion.div variants={stagger} className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-              {categories.map((category) => {
+              {categories.map((category, index) => {
                 const Icon = category.icon
                 return (
-                  <motion.div key={category.title} variants={reveal} className={`tilt-scene ${category.span}`}>
-                    <Link
-                      href={category.href}
-                      className="tilt-card surface-card surface-card-hover group relative block h-full min-h-[230px] overflow-hidden rounded-[24px]"
-                    >
-                      <Image
-                        src={category.image}
-                        alt={category.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#060810]/90 via-[#060810]/25 to-transparent" />
-                      <div className="absolute left-4 top-4 grid h-10 w-10 place-items-center rounded-2xl border border-white/25 bg-white/15 text-white backdrop-blur-md">
-                        <Icon className="h-[18px] w-[18px]" />
-                      </div>
-                      <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                        <h3 className="display-title text-xl">{category.title}</h3>
-                        <p className="mt-1 text-xs text-white/70">{category.description}</p>
-                        <p className="mt-3 text-xs font-medium text-white/90">{category.count} listings</p>
-                      </div>
-                    </Link>
-                  </motion.div>
+                  <BlurFade key={category.title} inView delay={index * 0.06} className={`${category.span} h-full`}>
+                    <div className="tilt-scene h-full">
+                      <Link
+                        href={category.href}
+                        className="tilt-card surface-card surface-card-hover group relative block h-full min-h-[230px] overflow-hidden rounded-[24px]"
+                      >
+                        <Image
+                          src={category.image}
+                          alt={category.title}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#060810]/90 via-[#060810]/25 to-transparent" />
+                        <div className="absolute left-4 top-4 grid h-10 w-10 place-items-center rounded-2xl border border-white/25 bg-white/15 text-white backdrop-blur-md">
+                          <Icon className="h-[18px] w-[18px]" />
+                        </div>
+                        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+                          <h3 className="display-title text-xl">{category.title}</h3>
+                          <p className="mt-1 text-xs text-white/70">{category.description}</p>
+                          <p className="mt-3 text-xs font-medium text-white/90">{category.count} listings</p>
+                        </div>
+                        {index === 0 && (
+                          <BorderBeam
+                            size={90}
+                            duration={7}
+                            colorFrom="#ffffff"
+                            colorTo="#38bdf8"
+                            borderWidth={2}
+                          />
+                        )}
+                      </Link>
+                    </div>
+                  </BlurFade>
                 )
               })}
             </motion.div>

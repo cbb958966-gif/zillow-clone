@@ -120,6 +120,8 @@
   --radius-md: calc(var(--radius));
   --radius-lg: calc(var(--radius) + 0.25rem);
   --radius-xl: calc(var(--radius) + 0.5rem);
+  --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+  --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
 }
 
 * {
@@ -989,6 +991,74 @@ a:hover {
 
 .animate-orb {
   animation: orb-drift 12s ease-in-out infinite;
+}
+
+@keyframes shimmer-slide {
+  to {
+    transform: translate(calc(100cqw - 100%), 0);
+  }
+}
+
+@keyframes spin-around {
+  0% {
+    transform: translateZ(0) rotate(0);
+  }
+  15%, 35% {
+    transform: translateZ(0) rotate(90deg);
+  }
+  65%, 85% {
+    transform: translateZ(0) rotate(270deg);
+  }
+  100% {
+    transform: translateZ(0) rotate(360deg);
+  }
+}
+
+.uiverse-press-button {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 9999px;
+  background: rgb(var(--primary-rgb));
+  box-shadow: 0 -3px rgba(255, 255, 255, 0.2) inset, 0 3px rgba(0, 0, 0, 0.28) inset, 0 3px 0 0 rgba(0, 0, 0, 0.18);
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.65rem 1.15rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: transform 0.45s cubic-bezier(0, 0.8, 0.26, 0.99), box-shadow 0.45s cubic-bezier(0, 0.8, 0.26, 0.99);
+  user-select: none;
+}
+
+.uiverse-press-button::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: rgb(var(--primary-rgb));
+  box-shadow: 0 -4px rgba(0, 0, 0, 0.28) inset, 0 4px rgba(255, 255, 255, 0.22) inset, -4px 0 rgba(255, 255, 255, 0.12) inset, 4px 0 rgba(0, 0, 0, 0.24) inset;
+  content: '';
+  pointer-events: none;
+  transition: box-shadow 0.45s cubic-bezier(0, 0.8, 0.26, 0.99);
+}
+
+.uiverse-press-button:hover::before {
+  box-shadow: 0 -4px rgba(0, 0, 0, 0.42) inset, 0 4px rgba(255, 255, 255, 0.3) inset, -4px 0 rgba(255, 255, 255, 0.2) inset, 4px 0 rgba(0, 0, 0, 0.4) inset;
+}
+
+.uiverse-press-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.18);
+}
+
+.uiverse-press-button:active::before {
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.18);
 }
 
 @media (prefers-reduced-motion: reduce) {

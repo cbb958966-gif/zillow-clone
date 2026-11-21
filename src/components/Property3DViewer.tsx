@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import SplineScene from '@/components/SplineScene'
 import {
   Box, ChevronLeft, ChevronRight, Expand, Maximize2, Pause, Play,
   RotateCw, X, ZoomIn, ZoomOut
@@ -141,6 +142,7 @@ export default function Property3DViewer({ images, title, onClose }: Property3DV
           onPointerCancel={handlePointerUp}
           onWheel={handleWheel}
         >
+          <SplineScene className="absolute inset-0 z-0 opacity-80" />
           <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-black/40 to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-gradient-to-t from-black/50 to-transparent" />
 

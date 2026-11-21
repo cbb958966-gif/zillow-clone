@@ -233,62 +233,66 @@ export default function PropertyDetail() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-card border-b border-border pb-6"
+              className="surface-card surface-card-hover relative overflow-hidden p-6 sm:p-8"
             >
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className={`pill px-4 py-1.5 text-xs font-bold uppercase tracking-wide ${property.status === 'ACTIVE' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : property.status === 'PENDING' ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white' : 'bg-secondary text-muted-foreground'}`}>
-                      {property.status === 'ACTIVE' ? 'For Sale' : property.status}
-                    </span>
-                    <span className="text-sm font-medium text-muted-foreground">|</span>
-                    <span className="pill text-sm font-semibold text-muted-foreground uppercase tracking-wider">{property.propertyType.replace(/_/g, ' ')}</span>
-                  </div>
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground mb-2 leading-tight">{property.address}</h1>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 sm:w-5 h-4 sm:h-5 text-primary flex-shrink-0" />
-                    <p className="text-sm sm:text-base md:text-lg font-medium text-muted-foreground">{property.city}, {property.state} {property.zipCode}</p>
-                  </div>
+              <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[rgba(var(--primary-rgb),0.09)] blur-3xl" />
+
+              <div className="relative">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <span className={`pill gap-2 px-3.5 py-1.5 text-[11px] font-semibold tracking-[0.12em] ${property.status === 'ACTIVE' ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400' : property.status === 'PENDING' ? 'border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-400' : 'bg-secondary text-muted-foreground'}`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${property.status === 'ACTIVE' ? 'bg-emerald-500' : property.status === 'PENDING' ? 'bg-amber-500' : 'bg-muted-foreground'}`} />
+                    {property.status === 'ACTIVE' ? 'For Sale' : property.status}
+                  </span>
+                  <span className="h-1 w-1 rounded-full bg-border" />
+                  <span className="pill border-transparent bg-secondary px-3.5 py-1.5 text-[11px] font-semibold tracking-[0.12em]">{property.propertyType.replace(/_/g, ' ')}</span>
+                </div>
+
+                <h1 className="display-title mt-5 text-3xl sm:text-4xl lg:text-[2.75rem]">{property.address}</h1>
+
+                <div className="mt-3 flex items-center gap-2.5">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                    <MapPin className="h-4 w-4" />
+                  </span>
+                  <p className="text-sm font-medium text-muted-foreground sm:text-base">{property.city}, {property.state} {property.zipCode}</p>
                 </div>
               </div>
-              
-              {/* Key Facts Bar - Modern Style */}
-              <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-4 mt-6 pt-6 border-t border-border">
-                <div className="flex items-center gap-2 bg-secondary px-3 sm:px-4 py-2 rounded-xl">
-                  <div className="w-8 sm:w-10 h-8 sm:h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Bed className="w-4 sm:w-5 h-4 sm:h-5 text-primary" />
-                  </div>
-                  <div>
-                    <span className="block font-bold text-foreground text-base sm:text-lg">{property.beds || '--'}</span>
-                    <span className="text-xs text-muted-foreground">Beds</span>
-                  </div>
+
+              <div className="relative mt-7 grid grid-cols-2 gap-1.5 rounded-[22px] border border-border/60 bg-secondary/60 p-1.5 sm:grid-cols-4">
+                <div className="flex items-center gap-3 rounded-2xl px-3 py-3 transition-colors hover:bg-card">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-card text-primary shadow-sm ring-1 ring-border/60">
+                    <Bed className="h-[18px] w-[18px]" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="display-title block text-lg leading-none">{property.beds || '--'}</span>
+                    <span className="mt-1.5 block text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Beds</span>
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 bg-secondary px-3 sm:px-4 py-2 rounded-xl">
-                  <div className="w-8 sm:w-10 h-8 sm:h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Bath className="w-4 sm:w-5 h-4 sm:h-5 text-primary" />
-                  </div>
-                  <div>
-                    <span className="block font-bold text-foreground text-base sm:text-lg">{property.baths ? (Number.isInteger(property.baths) ? property.baths : property.baths.toFixed(1)) : '--'}</span>
-                    <span className="text-xs text-muted-foreground">Baths</span>
-                  </div>
+                <div className="flex items-center gap-3 rounded-2xl px-3 py-3 transition-colors hover:bg-card">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-card text-primary shadow-sm ring-1 ring-border/60">
+                    <Bath className="h-[18px] w-[18px]" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="display-title block text-lg leading-none">{property.baths ? (Number.isInteger(property.baths) ? property.baths : property.baths.toFixed(1)) : '--'}</span>
+                    <span className="mt-1.5 block text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Baths</span>
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 bg-secondary px-3 sm:px-4 py-2 rounded-xl">
-                  <div className="w-8 sm:w-10 h-8 sm:h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Square className="w-4 sm:w-5 h-4 sm:h-5 text-primary" />
-                  </div>
-                  <div>
-                    <span className="block font-bold text-foreground text-base sm:text-lg">{property.sqft?.toLocaleString() || '--'}</span>
-                    <span className="text-xs text-muted-foreground">Sq Ft</span>
-                  </div>
+                <div className="flex items-center gap-3 rounded-2xl px-3 py-3 transition-colors hover:bg-card">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-card text-primary shadow-sm ring-1 ring-border/60">
+                    <Square className="h-[18px] w-[18px]" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="display-title block text-lg leading-none">{property.sqft?.toLocaleString() || '--'}</span>
+                    <span className="mt-1.5 block text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Sq Ft</span>
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 bg-secondary px-3 sm:px-4 py-2 rounded-xl">
-                  <div className="w-8 sm:w-10 h-8 sm:h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Calendar className="w-4 sm:w-5 h-4 sm:h-5 text-primary" />
-                  </div>
-                  <div>
-                    <span className="block font-bold text-foreground text-base sm:text-lg">{property.yearBuilt || '--'}</span>
-                    <span className="text-xs text-muted-foreground">Year Built</span>
-                  </div>
+                <div className="flex items-center gap-3 rounded-2xl px-3 py-3 transition-colors hover:bg-card">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-card text-primary shadow-sm ring-1 ring-border/60">
+                    <Calendar className="h-[18px] w-[18px]" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="display-title block text-lg leading-none">{property.yearBuilt || '--'}</span>
+                    <span className="mt-1.5 block text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Year Built</span>
+                  </span>
                 </div>
               </div>
             </motion.div>

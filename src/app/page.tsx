@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
@@ -20,6 +21,7 @@ import {
   Star,
   TrendingUp,
   Users,
+  X,
 } from 'lucide-react'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
@@ -82,6 +84,7 @@ const stagger = {
 }
 
 export default function HomePage() {
+  const router = useRouter()
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
@@ -113,7 +116,8 @@ export default function HomePage() {
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault()
-    window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`
+    const query = searchQuery.trim()
+    router.push(query ? `/search?q=${encodeURIComponent(query)}` : '/search')
   }
 
   const handleSave = async (event: React.MouseEvent, propertyId: string) => {
@@ -197,21 +201,35 @@ export default function HomePage() {
               <motion.form
                 variants={reveal}
                 onSubmit={handleSearch}
-                className="glass-control mt-9 flex w-full max-w-2xl flex-col gap-2 rounded-[26px] p-2 sm:flex-row sm:items-center"
+                className="glass-control mt-9 flex w-full max-w-2xl flex-col gap-2 rounded-[28px] p-2 sm:flex-row sm:items-center sm:rounded-full"
               >
                 <div className="relative flex-1">
-                  <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                  <Search className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-white/60" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(event) => setSearchQuery(event.target.value)}
                     placeholder="City, neighborhood, or ZIP"
-                    className="h-14 w-full rounded-2xl bg-background/90 pl-12 pr-4 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/40"
+                    className="h-14 w-full rounded-[22px] bg-white/10 pl-12 pr-12 text-sm text-white outline-none backdrop-blur-xl placeholder:text-white/50 focus:bg-white/15 focus:ring-2 focus:ring-white/30 sm:rounded-full"
                     aria-label="Search location"
                   />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      aria-label="Clear search"
+                      className="absolute right-3 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
-                <button type="submit" className="btn-smooth h-14 rounded-2xl px-7 text-sm">
-                  Search homes <ArrowRight className="h-4 w-4" />
+                <button
+                  type="submit"
+                  className="btn-smooth group flex h-14 w-full items-center justify-center gap-2 rounded-[22px] px-7 text-sm sm:w-auto sm:shrink-0 sm:rounded-full"
+                >
+                  Search homes
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
                 </button>
               </motion.form>
 

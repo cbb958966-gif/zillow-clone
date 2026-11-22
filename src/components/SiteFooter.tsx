@@ -43,7 +43,7 @@ export default function SiteFooter() {
               <span className="grid h-9 w-9 place-items-center rounded-[13px] bg-gradient-to-br from-[#0a84ff] to-[#005bb5] shadow-[0_8px_20px_-8px_rgba(0,113,227,0.9)]">
                 <Home className="h-[18px] w-[18px] text-white" strokeWidth={2.4} />
               </span>
-              <span className="display-title text-[19px]">HomeVista</span>
+              <span className="display-title text-[19px]">PRIMAHOMES</span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               A calmer way to find your next home. Thoughtful search, verified listings, and the details that matter.
@@ -68,7 +68,7 @@ export default function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col gap-3 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 HomeVista. Crafted for the way you live.</p>
+          <p>© 2026 PRIMAHOMES. Crafted for the way you live.</p>
           <div className="flex items-center gap-5">
             <Link href="/terms" className="transition-colors hover:text-foreground">Terms</Link>
             <Link href="/privacy" className="transition-colors hover:text-foreground">Privacy</Link>

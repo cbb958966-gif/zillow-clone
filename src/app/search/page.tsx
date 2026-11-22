@@ -199,7 +199,7 @@ function SearchContent() {
 
   useEffect(() => {
     try {
-      const saved = JSON.parse(localStorage.getItem('homevista:savedSearches') || '[]') as string[]
+      const saved = JSON.parse(localStorage.getItem('primahomes:savedSearches') || '[]') as string[]
       setSearchSaved(saved.includes(searchParams.toString()))
     } catch {
       setSearchSaved(false)
@@ -274,10 +274,10 @@ function SearchContent() {
 
   const saveCurrentSearch = () => {
     try {
-      const saved = JSON.parse(localStorage.getItem('homevista:savedSearches') || '[]') as string[]
+      const saved = JSON.parse(localStorage.getItem('primahomes:savedSearches') || '[]') as string[]
       const current = searchParams.toString()
       if (!saved.includes(current)) saved.push(current)
-      localStorage.setItem('homevista:savedSearches', JSON.stringify(saved))
+      localStorage.setItem('primahomes:savedSearches', JSON.stringify(saved))
       setSearchSaved(true)
     } catch {
       setSearchSaved(false)

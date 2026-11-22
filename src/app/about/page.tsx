@@ -33,10 +33,10 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center max-w-3xl mx-auto">
-              <h1 className="text-4xl sm:text-5xl font-bold mb-6">About HomeVista</h1>
+              <h1 className="text-4xl sm:text-5xl font-bold mb-6">About PRIMAHOMES</h1>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 We're transforming the real estate experience by combining cutting-edge technology with personalized service. 
-                Founded in 2020, HomeVista has helped thousands of people find their perfect home.
+                Founded in 2020, PRIMAHOMES has helped thousands of people find their perfect home.
               </p>
             </motion.div>
           </div>
@@ -64,7 +64,7 @@ export default function AboutPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">Our Team</h2>
-              <p className="text-muted-foreground">Meet the people behind HomeVista</p>
+              <p className="text-muted-foreground">Meet the people behind PRIMAHOMES</p>
             </motion.div>
             <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true }} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {team.map((t, idx) => (

@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
             <h3 style="color: #333;">Message</h3>
             <p style="background: #f9f9f9; padding: 15px; border-radius: 5px;">${escapeHtml(message).replace(/\n/g, '<br>')}</p>
             <hr style="border: 1px solid #eee; margin: 20px 0;">
-            <p style="color: #666; font-size: 12px;">This inquiry was sent from HomeVista real estate website.</p>
+            <p style="color: #666; font-size: 12px;">This inquiry was sent from PRIMAHOMES real estate website.</p>
           </div>
         `,
       }

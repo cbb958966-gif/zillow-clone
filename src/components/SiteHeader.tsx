@@ -23,7 +23,7 @@ function Logo() {
         <span className="pointer-events-none absolute inset-[1px] rounded-[12px] bg-gradient-to-b from-white/35 to-transparent" />
         <Home className="relative h-[18px] w-[18px] text-white" strokeWidth={2.4} />
       </span>
-      <span className="display-title text-[19px]">HomeVista</span>
+      <span className="display-title text-[19px]">PRIMAHOMES</span>
     </span>
   )
 }

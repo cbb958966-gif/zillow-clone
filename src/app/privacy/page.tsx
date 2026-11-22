@@ -28,7 +28,7 @@ export default function PrivacyPage() {
               <div><h2 className="text-2xl font-bold mb-4">Information Sharing</h2><p className="text-muted-foreground leading-relaxed">We do not share your personal information with third parties except as described in this policy. We may share information with service providers who perform services on our behalf, when required by law, or in connection with a business transfer.</p></div>
               <div><h2 className="text-2xl font-bold mb-4">Data Security</h2><p className="text-muted-foreground leading-relaxed">We implement appropriate technical and organizational measures to protect the security of your personal information. However, no method of transmission over the Internet or electronic storage is 100% secure.</p></div>
               <div><h2 className="text-2xl font-bold mb-4">Your Rights</h2><p className="text-muted-foreground leading-relaxed">You have the right to access, update, or delete your personal information. You can do this by contacting us or through your account settings. You may also opt out of marketing communications at any time.</p></div>
-              <div><h2 className="text-2xl font-bold mb-4">Contact Us</h2><p className="text-muted-foreground leading-relaxed">If you have any questions about this Privacy Policy, please contact us at support@homevista.com or through our Contact page.</p></div>
+              <div><h2 className="text-2xl font-bold mb-4">Contact Us</h2><p className="text-muted-foreground leading-relaxed">If you have any questions about this Privacy Policy, please contact us at support@primahomes.co or through our Contact page.</p></div>
             </div>
           </div>
         </section>

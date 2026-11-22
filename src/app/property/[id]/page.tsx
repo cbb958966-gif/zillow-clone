@@ -116,7 +116,7 @@ export default function PropertyDetail() {
         const data = await response.json()
         if (data.agent) {
           const user = data.agent.user
-          data.agent.name = `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || data.agent.email || 'HomeVista Agent'
+          data.agent.name = `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || data.agent.email || 'PRIMAHOMES Agent'
         }
         setProperty(data)
       } else {
@@ -360,7 +360,7 @@ export default function PropertyDetail() {
                     <TrendingUp className="h-[18px] w-[18px]" />
                   </span>
                   <div>
-                    <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">HomeVista estimate</div>
+                    <div className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">PRIMAHOMES estimate</div>
                     <div className="display-title text-xl">${estimatedValue.toLocaleString()}</div>
                   </div>
                 </div>
@@ -634,7 +634,7 @@ export default function PropertyDetail() {
                     </div>
                     <div className="min-w-0">
                       <Link href={`/agent/${property.agent.id}`} className="font-semibold hover:text-primary">{property.agent.name}</Link>
-                      <div className="text-sm text-muted-foreground">{property.agent.broker || 'HomeVista Realty'}</div>
+                      <div className="text-sm text-muted-foreground">{property.agent.broker || 'PRIMAHOMES Realty'}</div>
                       <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                         {agentRating && (
                           <span className="inline-flex items-center gap-1 font-medium text-foreground">

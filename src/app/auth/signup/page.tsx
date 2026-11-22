@@ -107,7 +107,7 @@ export default function SignUp() {
               <div className="text-center">
                 <span className="eyebrow">
                   <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                  Join HomeVista
+                  Join PRIMAHOMES
                 </span>
                 <h1 className="display-title mt-4 text-3xl text-foreground sm:text-[34px]">
                   Create your account

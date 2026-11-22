@@ -451,7 +451,7 @@ export default function HomePage() {
                   <Home className="h-8 w-8" />
                 </span>
                 <h3 className="display-title mt-5 text-xl">No properties yet</h3>
-                <p className="mt-2 text-sm text-muted-foreground">Be the first to list a property on HomeVista.</p>
+                <p className="mt-2 text-sm text-muted-foreground">Be the first to list a property on PRIMAHOMES.</p>
               </div>
             )}
           </motion.div>
@@ -461,7 +461,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger}>
               <motion.div variants={reveal} className="mx-auto mb-14 max-w-2xl text-center">
-                <span className="eyebrow">Why HomeVista</span>
+                <span className="eyebrow">Why PRIMAHOMES</span>
                 <h2 className="display-title mt-3 text-3xl sm:text-4xl">Everything you need, nothing you don&apos;t</h2>
                 <p className="mt-3 text-sm text-muted-foreground">A focused experience built around the decisions that actually matter.</p>
               </motion.div>

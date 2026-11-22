@@ -29,7 +29,7 @@ export default function HelpPage() {
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center max-w-3xl mx-auto">
               <h1 className="text-4xl sm:text-5xl font-bold mb-6">Help Center</h1>
-              <p className="text-lg text-muted-foreground mb-8">Find answers to common questions and learn how to get the most out of HomeVista.</p>
+              <p className="text-lg text-muted-foreground mb-8">Find answers to common questions and learn how to get the most out of PRIMAHOMES.</p>
               <div className="relative max-w-xl mx-auto">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input type="text" placeholder="Search for help..." className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary" />

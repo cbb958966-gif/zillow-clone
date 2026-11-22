@@ -38,7 +38,7 @@ export default function ContactPage() {
                 <div className="space-y-6">
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center shrink-0"><Mail className="w-5 h-5 text-primary" /></div>
-                    <div><h3 className="font-medium mb-1">Email</h3><p className="text-sm text-muted-foreground">support@homevista.com</p></div>
+                    <div><h3 className="font-medium mb-1">Email</h3><p className="text-sm text-muted-foreground">support@primahomes.co</p></div>
                   </div>
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center shrink-0"><Phone className="w-5 h-5 text-primary" /></div>

@@ -102,7 +102,7 @@ export default function SignIn() {
                   Sign in to your account
                 </h1>
                 <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-muted-foreground">
-                  New to HomeVista?{' '}
+                  New to PRIMAHOMES?{' '}
                   <Link
                     href="/auth/signup"
                     className="font-medium text-primary underline-offset-4 transition-colors hover:text-foreground hover:underline"

@@ -29,7 +29,7 @@ interface Property {
 
 interface MapViewProps {
   properties: Property[]
-  center?: [number, number]
+  center?: [number | null | undefined, number | null | undefined]
   zoom?: number
   height?: string
   onPropertyClick?: (property: Property) => void
@@ -93,42 +93,50 @@ export default function MapView({ properties, center = [40.7128, -74.006], zoom 
   const mapInstance = useRef<L.Map | null>(null)
   const markersRef = useRef<L.Marker[]>([])
   const tileLayerRef = useRef<L.TileLayer | null>(null)
+  const [tileError, setTileError] = useState(false)
   const [mounted, setMounted] = useState(false)
 
-  const validCenter: [number, number] = center[0] != null && center[1] != null ? center : [40.7128, -74.006]
+  const validCenter: [number, number] = center[0] != null && center[1] != null ? center as [number, number] : [40.7128, -74.006]
   const validProperties = properties.filter(p => p.lat && p.lng)
   const hasLocations = validProperties.length > 0
 
   useEffect(() => { setMounted(true) }, [])
 
+  // Intentionally only runs once on mount; center/zoom/theme changes are
+  // handled reactively by the effects below to avoid recreating the map.
   useEffect(() => {
     if (!mounted || !mapRef.current) return
     if (mapInstance.current) { mapInstance.current.remove(); mapInstance.current = null }
 
     const map = L.map(mapRef.current, { zoomControl: true, scrollWheelZoom: true }).setView(validCenter, zoom)
 
-    tileLayerRef.current = L.tileLayer(theme === 'dark' ? TILES.dark : TILES.light, {
+    const layer = L.tileLayer(theme === 'dark' ? TILES.dark : TILES.light, {
       attribution: CARTO_ATTRIBUTION,
       maxZoom: 20,
-    }).addTo(map)
+    })
+    layer.on('tileerror', () => setTileError(true))
+    layer.addTo(map)
 
+    tileLayerRef.current = layer
     mapInstance.current = map
     return () => { if (mapInstance.current) { mapInstance.current.remove(); mapInstance.current = null } }
   }, [mounted])
 
   useEffect(() => {
     if (!mapInstance.current || !mounted) return
-    const newCenter: [number, number] = center[0] != null && center[1] != null ? center : [40.7128, -74.006]
-    mapInstance.current.setView(newCenter, zoom)
-  }, [center[0], center[1], zoom, mounted])
+    mapInstance.current.setView(validCenter, zoom)
+  }, [validCenter, zoom, mounted])
 
   useEffect(() => {
     if (!mapInstance.current || !mounted) return
     if (tileLayerRef.current) { tileLayerRef.current.remove() }
-    tileLayerRef.current = L.tileLayer(theme === 'dark' ? TILES.dark : TILES.light, {
+    const layer = L.tileLayer(theme === 'dark' ? TILES.dark : TILES.light, {
       attribution: CARTO_ATTRIBUTION,
       maxZoom: 20,
-    }).addTo(mapInstance.current)
+    })
+    layer.on('tileerror', () => setTileError(true))
+    layer.addTo(mapInstance.current)
+    tileLayerRef.current = layer
   }, [theme, mounted])
 
   useEffect(() => {
@@ -198,6 +206,16 @@ export default function MapView({ properties, center = [40.7128, -74.006], zoom 
               <svg className="w-8 h-8 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </div>
             <p className="text-muted-foreground text-sm font-medium">No location data available</p>
+          </div>
+        </div>
+      )}
+      {tileError && !hasLocations && (
+        <div className="absolute inset-0 flex items-center justify-center bg-background/90 backdrop-blur-sm z-[1000]">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            </div>
+            <p className="text-red-600 text-sm font-medium">Map tiles failed to load. Check your map provider configuration.</p>
           </div>
         </div>
       )}

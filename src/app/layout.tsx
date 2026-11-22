@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/context/ThemeContext';
 import { NextAuthProvider } from '@/components/NextAuthProvider';
 import ToastContainerWrapper from '@/components/ToastContainerWrapper';
 import MotionProvider from '@/components/MotionProvider';
+import PageTransition from '@/components/PageTransition'
 import { Inter } from 'next/font/google';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -46,7 +47,7 @@ export default function RootLayout({
             <ThemeProvider>
               <MotionProvider>
                 <ErrorBoundary>
-                  {children}
+                  <PageTransition>{children}</PageTransition>
                 </ErrorBoundary>
               </MotionProvider>
               <ToastContainerWrapper />

@@ -159,6 +159,8 @@ function SearchContent() {
   const [filters, setFilters] = useState({
     search: searchParams.get('q') || searchParams.get('search') || '',
     propertyType: searchParams.get('type') || '',
+    city: searchParams.get('city') || '',
+    state: searchParams.get('state') || '',
     minPrice: '',
     maxPrice: '',
     minBeds: '',
@@ -183,7 +185,9 @@ function SearchContent() {
     setPagination(prev => ({ ...prev, page: pageFromUrl }))
     const searchFromUrl = searchParams.get('q') || ''
     const typeFromUrl = searchParams.get('type') || ''
-    setFilters(prev => ({ ...prev, search: searchFromUrl, propertyType: typeFromUrl }))
+    const cityFromUrl = searchParams.get('city') || ''
+    const stateFromUrl = searchParams.get('state') || ''
+    setFilters(prev => ({ ...prev, search: searchFromUrl, propertyType: typeFromUrl, city: cityFromUrl, state: stateFromUrl }))
     fetchProperties(pageFromUrl)
     setIsInitialLoad(false)
   }, [searchParams])
@@ -222,9 +226,13 @@ function SearchContent() {
     try {
       const searchFromUrl = searchParams.get('q') || ''
       const typeFromUrl = searchParams.get('type') || ''
+      const cityFromUrl = searchParams.get('city') || ''
+      const stateFromUrl = searchParams.get('state') || ''
       const params = new URLSearchParams()
       if (searchFromUrl) params.set('search', searchFromUrl)
       if (typeFromUrl) params.set('propertyType', typeFromUrl.toUpperCase())
+      if (cityFromUrl) params.set('city', cityFromUrl)
+      if (stateFromUrl) params.set('state', stateFromUrl)
       const [sortBy, sortOrder] = sortOptions[(searchParams.get('sort') || 'newest') as keyof typeof sortOptions] || sortOptions.newest
       params.set('sortBy', sortBy)
       params.set('sortOrder', sortOrder)
@@ -248,6 +256,8 @@ function SearchContent() {
     const params = new URLSearchParams()
     if (filters.search) params.set('q', filters.search)
     if (filters.propertyType) params.set('type', filters.propertyType)
+    if (filters.city) params.set('city', filters.city)
+    if (filters.state) params.set('state', filters.state)
     const currentSort = searchParams.get('sort')
     if (currentSort) params.set('sort', currentSort)
     params.set('page', '1')
@@ -275,7 +285,7 @@ function SearchContent() {
   }
 
   const clearFilters = () => {
-    setFilters({ search: '', propertyType: '', minPrice: '', maxPrice: '', minBeds: '', maxBeds: '', minBaths: '', maxBaths: '' })
+    setFilters({ search: '', propertyType: '', city: '', state: '', minPrice: '', maxPrice: '', minBeds: '', maxBeds: '', minBaths: '', maxBaths: '' })
     router.push('/search')
   }
 

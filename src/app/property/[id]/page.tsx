@@ -189,9 +189,9 @@ export default function PropertyDetail() {
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Link href="/" className="hover:text-primary">Home</Link>
             <ChevronRight className="w-4 h-4" />
-            <Link href="/search" className="hover:text-primary">{property.state}</Link>
+            <Link href={`/search?state=${encodeURIComponent(property.state)}`} className="hover:text-primary">{property.state}</Link>
             <ChevronRight className="w-4 h-4" />
-            <Link href={`/search?city=${property.city}`} className="hover:text-primary">{property.city}</Link>
+            <Link href={`/search?city=${encodeURIComponent(property.city)}&state=${encodeURIComponent(property.state)}`} className="hover:text-primary">{property.city}</Link>
             <ChevronRight className="w-4 h-4" />
             <span className="text-foreground font-medium">{property.address}</span>
           </div>

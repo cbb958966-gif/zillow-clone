@@ -36,6 +36,9 @@ export async function POST(request: NextRequest) {
       preferredContact
     } = body
 
+    const origin = request.headers.get('origin') || process.env.NEXTAUTH_URL || 'http://localhost:3000'
+    const propertyLink = `${origin}/property/${propertyId}`
+
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: 'Name, email, and message are required' },
@@ -63,6 +66,7 @@ export async function POST(request: NextRequest) {
             <h2 style="color: #0066cc;">New Property Inquiry</h2>
             <p><strong>Property:</strong> ${escapeHtml(property?.title || 'N/A')}</p>
             <p><strong>Property Address:</strong> ${escapeHtml(property?.address || 'N/A')}, ${escapeHtml(property?.city || '')}, ${escapeHtml(property?.state || '')} ${escapeHtml(property?.zipCode || '')}</p>
+            <p><strong>Listing Link:</strong> <a href="${propertyLink}" style="color: #0066cc;">${propertyLink}</a></p>
             <hr style="border: 1px solid #eee; margin: 20px 0;">
             <h3 style="color: #333;">Client Information</h3>
             <p><strong>Name:</strong> ${escapeHtml(name)}</p>
